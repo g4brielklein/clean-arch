@@ -5,9 +5,9 @@ export class InvalidFieldError extends Error {
     constructor(message: string, { errorCode }) {
         super(message);
 
-        this.name = "InvalidFieldError"
-        this.errorCode = errorCode
-        this.statusCode = 400
+        this.name = "InvalidFieldError";
+        this.errorCode = errorCode;
+        this.statusCode = 422;
     }
 
     toJSON() {
@@ -16,20 +16,20 @@ export class InvalidFieldError extends Error {
             message: this.message,
             error_code: this.errorCode,
             status_code: this.statusCode,
-        }
-    }
+        };
+    };
 }
 
 export class InternalServerError extends Error {
-    statusCode: number
-    cause: any
+    statusCode: number;
+    cause: any;
 
     constructor({ cause }) {
         super("Internal Server Error");
 
-        this.name = "InternalServerError"
-        this.statusCode = 500
-        this.cause = cause
+        this.name = "InternalServerError";
+        this.statusCode = 500;
+        this.cause = cause;
     }
 
     toJSON() {
@@ -37,20 +37,20 @@ export class InternalServerError extends Error {
             name: this.name,
             message: this.message,
             status_code: this.statusCode,
-        }
-    }
+        };
+    };
 }
 
 export class ResourceAlreadyExistsError extends Error {
-    errorCode: number
-    statusCode: number
+    errorCode: number;
+    statusCode: number;
 
     constructor(message: string, { errorCode }) {
-        super(message)
+        super(message);
 
-        this.name = "ResourceAlreadyExistsError"
+        this.name = "ResourceAlreadyExistsError";
         this.errorCode = errorCode;
-        this.statusCode = 409
+        this.statusCode = 409;
     }
 
     toJSON() {
@@ -59,20 +59,20 @@ export class ResourceAlreadyExistsError extends Error {
             message: this.message,
             error_code: this.errorCode,
             status_code: this.statusCode,
-        }
-    }
+        };
+    };
 }
 
 export class ResourceNotFoundError extends Error {
-    errorCode: number
-    statusCode: number
+    errorCode: number;
+    statusCode: number;
 
     constructor(message: string, { errorCode }) {
-        super(message)
+        super(message);
 
-        this.name = "ResourceNotFoundError"
-        this.statusCode = 404
-        this.errorCode = errorCode
+        this.name = "ResourceNotFoundError";
+        this.statusCode = 404;
+        this.errorCode = errorCode;
     }
 
     toJSON() {
@@ -81,6 +81,6 @@ export class ResourceNotFoundError extends Error {
             message: this.message,
             error_code: this.errorCode,
             status_code: this.statusCode,
-        }
-    }
+        };
+    };
 }
