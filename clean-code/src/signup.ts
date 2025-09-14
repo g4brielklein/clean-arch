@@ -14,11 +14,11 @@ app.post("/signup", async (req, res) => {
         res.status(201).json(userCreated);
     } catch(err: any) {
         if (err.errorCode) {
-            console.error(err)
+            console.error(err);
             return res.status(err.statusCode).json(err);
         }
         const error = new InternalServerError({ cause: err });
-        console.error(error)
+        console.error(error);
         res.status(error.statusCode).json(error);
     }
 });
@@ -31,7 +31,7 @@ app.get("/accounts/:accountId", async (req, res) => {
         res.status(200).json(user);
     } catch(err: any) {
         if (err.errorCode) {
-            console.error(err)
+            console.error(err);
             return res.status(err.statusCode).json(err);
         }
         const error = new InternalServerError({ cause: err });
