@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "dev": "nodemon src/signup.ts",
+    "dev": "nodemon src/api.ts",
     "test": "npx jest",
     "docker:start": "docker compose up -d",
     "docker:stop": "docker compose stop",

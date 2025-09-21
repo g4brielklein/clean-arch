@@ -1,9 +1,12 @@
 import { randomUUID } from 'node:crypto';
 import { InvalidFieldError, ResourceAlreadyExistsError } from '../infra/errors';
-import { query } from '../infra/database';
 import { validateCpf } from '../src/utils/validateCpf';
 import { validatePassword } from '../src/utils/validatePassword';
+
+import AccountDAO from './data';
+
 interface User { 
+    id: string,
     name: string, 
     email: string, 
     cpf: string, 
@@ -13,26 +16,18 @@ interface User {
     password: string,
 };
 export default class Signup {
-    createUser = async (fields: User) => {
-        const { name, email, cpf, carPlate, isPassenger, isDriver, password } = fields;
-        const id = randomUUID();
+    constructor(readonly accountDAO: AccountDAO) {}
 
-        try {
-            const [userAlreadyExists] = await query({
-                query: "SELECT account_id FROM ccca.accounts WHERE email = $1;",
-                values: [email],
-            });
-            if (userAlreadyExists) throw new ResourceAlreadyExistsError(`Email ${email} already exists`, { errorCode: -4 });
-            this.validateFields(fields);
-            const formattedCpf = cpf.replace(/\D/g,'');
-            await query({
-                query: "INSERT INTO ccca.accounts (account_id, name, email, cpf, car_plate, is_passenger, is_driver, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)",
-                values: [id, name, email, formattedCpf, carPlate, !!isPassenger, !!isDriver, password],
-            });
-            return { accountId: id };
-        } catch(err) {
-            throw err;
-        }
+    execute = async (fields: User) => {
+        const { email } = fields;
+        fields.id = randomUUID();
+
+        const userAlreadyExists = await this.accountDAO.getAccountByEmail(email);
+        if (userAlreadyExists) throw new ResourceAlreadyExistsError(`Email ${email} already exists`, { errorCode: -4 });
+
+        this.validateFields(fields);
+        await this.accountDAO.saveAccount(fields);
+        return { accountId: fields.id };
     }
 
     validateFields = (fields: User) => {
