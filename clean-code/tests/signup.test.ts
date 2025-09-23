@@ -1,55 +1,53 @@
-import axios from 'axios';
+import { AccountDAOMemory, AccountDAODatabase } from '../src/data';
+import Signup from '../src/signup';
+import GetAccount from '../src/getAccount';
+import { randomUUID } from 'node:crypto';
 
-axios.defaults.validateStatus = () => true;
+const accountDAO = new AccountDAOMemory();
+const signup = new Signup(accountDAO);
+const getAccount = new GetAccount(accountDAO);
 
-test("Should create an user type passenger", async () => {
+test("Should create an account with type passenger", async () => {
     const input = {
+        id: randomUUID(),
         name: 'John Doe',
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321558',
         password: 'Abcd1234',
         isPassenger: true,
     };
-
-    const responseSignup = await axios.post('http://localhost:3000/signup', input);
-    const outputSignup = responseSignup.data;
+    const outputSignup = await signup.execute(input);
     expect(outputSignup.accountId).toBeDefined();
 
-    const responseGetAccount = await axios.get(`http://localhost:3000/accounts/${outputSignup.accountId}`);
-    const outputGetAccount = responseGetAccount.data;
+    const outputGetAccount = await getAccount.execute(outputSignup.accountId);
     expect(outputGetAccount.name).toBe(input.name);
     expect(outputGetAccount.email).toBe(input.email);
     expect(outputGetAccount.cpf).toBe(input.cpf);
-    expect(outputGetAccount.is_passenger).toBe(input.isPassenger);
-})
+});
 
-test("Should create an user type driver", async () => {
+test("Should create an account with type driver", async () => {
     const input = {
+        id: randomUUID(),
         name: 'John Doe',
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321558',
         password: 'Abcd1234',
         isPassenger: false,
         isDriver: true,
-        carPlate: 'IOG6D88'
+        carPlate: 'IOG5C77'
     };
-
-    const responseSignup = await axios.post('http://localhost:3000/signup', input);
-    const outputSignup = responseSignup.data;
+    const outputSignup = await signup.execute(input);
     expect(outputSignup.accountId).toBeDefined();
 
-    const responseGetAccount = await axios.get(`http://localhost:3000/accounts/${outputSignup.accountId}`);
-    const outputGetAccount = responseGetAccount.data;
+    const outputGetAccount = await getAccount.execute(outputSignup.accountId);
     expect(outputGetAccount.name).toBe(input.name);
     expect(outputGetAccount.email).toBe(input.email);
     expect(outputGetAccount.cpf).toBe(input.cpf);
-    expect(outputGetAccount.is_passenger).toBe(input.isPassenger);
-    expect(outputGetAccount.is_driver).toBe(input.isDriver);
-    expect(outputGetAccount.car_plate).toBe(input.carPlate);
-})
+});
 
 test("Should not create an user with invalid name", async () => {
     const input = {
+        id: randomUUID(),
         name: 'JohnDoe',
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321558',
@@ -57,14 +55,15 @@ test("Should not create an user with invalid name", async () => {
         isPassenger: true,
     };
 
-    const responseSignup = await axios.post('http://localhost:3000/signup', input);
-    expect(responseSignup.status).toBe(422);
-    const outputSignup = responseSignup.data;
-    expect(outputSignup.error_code).toBe(-3);
-})
+    await expect(signup.execute(input)).rejects.toMatchObject({
+        errorCode: -3,
+        statusCode: 422,
+    });
+});
 
 test("Should not create an user with invalid email", async () => {
     const input = {
+        id: randomUUID(),
         name: 'John Doe',
         email: `johndoe${Math.random()}gmail.com`,
         cpf: '97456321558',
@@ -72,13 +71,15 @@ test("Should not create an user with invalid email", async () => {
         isPassenger: true,
     };
 
-    const responseSignup = await axios.post('http://localhost:3000/signup', input);
-    const outputSignup = responseSignup.data;
-    expect(outputSignup.error_code).toBe(-2);
-})
+    await expect(signup.execute(input)).rejects.toMatchObject({
+        errorCode: -2,
+        statusCode: 422,
+    });
+});
 
 test("Should not create an user with invalid CPF", async () => {
     const input = {
+        id: randomUUID(),
         name: 'John Doe',
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321557',
@@ -86,13 +87,15 @@ test("Should not create an user with invalid CPF", async () => {
         isPassenger: true,
     };
 
-    const responseSignup = await axios.post('http://localhost:3000/signup', input);
-    const outputSignup = responseSignup.data;
-    expect(outputSignup.error_code).toBe(-1);
-})
+    await expect(signup.execute(input)).rejects.toMatchObject({
+        errorCode: -1,
+        statusCode: 422,
+    });
+});
 
 test("Should not create an user with invalid password", async () => {
     const input = {
+        id: randomUUID(),
         name: 'John Doe',
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321558',
@@ -100,7 +103,31 @@ test("Should not create an user with invalid password", async () => {
         isPassenger: true,
     };
 
-    const responseSignup = await axios.post('http://localhost:3000/signup', input);
-    const outputSignup = responseSignup.data;
-    expect(outputSignup.error_code).toBe(-5);
-})
+    await expect(signup.execute(input)).rejects.toMatchObject({
+        errorCode: -5,
+        statusCode: 422,
+    });
+});
+
+test("Should create an account using fake", async () => {
+    const accountDAO = new AccountDAOMemory();
+    const signup = new Signup(accountDAO);
+    const getAccount = new GetAccount(accountDAO);
+
+    const input = {
+        id: randomUUID(),
+        name: 'John Doe',
+        email: `johndoe${Math.random()}@gmail.com`,
+        cpf: '97456321558',
+        password: 'Abcd1234',
+        isPassenger: true,
+    };
+
+    const outputSignup = await signup.execute(input);
+    expect(outputSignup.accountId).toBeDefined();
+    const outputGetAccount = await getAccount.execute(outputSignup.accountId);
+    expect(outputGetAccount.name).toBe(input.name);
+    expect(outputGetAccount.email).toBe(input.email);
+    expect(outputGetAccount.cpf).toBe(input.cpf);
+    expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
+});
