@@ -1,5 +1,5 @@
 import express from "express";
-import { AccountDAODatabase } from './data';
+import { AccountDAODatabase, AccountDAOMemory } from './data';
 import { InternalServerError } from '../infra/errors'
 import Signup from './signup';
 import GetAccount from './getAccount';
