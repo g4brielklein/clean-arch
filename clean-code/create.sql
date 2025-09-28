@@ -24,5 +24,5 @@ CREATE TABLE ccca.rides (
 	from_long numeric,
 	to_let numeric,
 	to_long numeric,
-	date timestamp,
+	date timestamp
 );
