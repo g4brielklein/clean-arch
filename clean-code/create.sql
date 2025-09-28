@@ -12,3 +12,17 @@ CREATE TABLE ccca.accounts (
 	is_driver boolean NOT NULL DEFAULT false,
 	password TEXT NOT NULL
 );
+
+CREATE TABLE ccca.rides (
+	ride_id uuid,
+	passenger_id uuid,
+	driver_id uuid,
+	status text,
+	fare numeric,
+	distance numeric,
+	from_lat numeric,
+	from_long numeric,
+	to_let numeric,
+	to_long numeric,
+	date timestamp,
+);
