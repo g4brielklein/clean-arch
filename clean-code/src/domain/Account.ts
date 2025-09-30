@@ -1,5 +1,5 @@
 import { randomUUID } from 'crypto';
-import { InvalidFieldError } from '../../infra/errors';
+import { InvalidFieldError } from '../infra/errors';
 import { validatePassword } from '../utils/validatePassword';
 import { validateCpf } from '../utils/validateCpf';
 
@@ -62,6 +62,7 @@ export default class Account {
         isDriver: boolean,
     ) {
         const accountId = randomUUID();
-        return new Account(accountId, name, email, cpf, password, carPlate, isPassenger, isDriver);
+        const formattedCpf = cpf.replace(/\D/g,'');
+        return new Account(accountId, name, email, formattedCpf, password, carPlate, isPassenger, isDriver);
     }
 }

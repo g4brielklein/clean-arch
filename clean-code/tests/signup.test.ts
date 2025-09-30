@@ -1,6 +1,6 @@
 import sinon from 'sinon';
 import { AccountDAOMemory, AccountDAODatabase } from '../src/data';
-import Signup from '../src/signup';
+import Signup from '../src/application/usecase/Signup';
 import GetAccount from '../src/getAccount';
 import { randomUUID } from 'node:crypto';
 
