@@ -1,6 +1,6 @@
-import AccountDAO from './data';
+import AccountDAO from './infra/repository/AccountRepository';
 import { validate } from 'uuid';
-import { ResourceNotFoundError } from '../infra/errors';
+import { ResourceNotFoundError } from './infra/errors';
 
 export default class GetAccount {
     constructor(readonly accountDAO: AccountDAO) {}

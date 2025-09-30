@@ -1,16 +1,16 @@
 import express from "express";
-import { AccountDAODatabase, AccountDAOMemory } from './data';
-import { InternalServerError } from '../infra/errors'
-import Signup from './signup';
+import { AccountRepositoryDatabase, AccountRepositoryMemory } from './infra/repository/AccountRepository';
+import { InternalServerError } from './infra/errors'
+import Signup from './application/usecase/Signup';
 import GetAccount from './getAccount';
 const PORT = 3000;
 
 const app = express();
 app.use(express.json());
 
-const accountDAO = new AccountDAODatabase();
-const getAccount = new GetAccount(accountDAO);
-const signup = new Signup(accountDAO);
+const accountRepository = new AccountRepositoryDatabase();
+const getAccount = new GetAccount(accountRepository);
+const signup = new Signup(accountRepository);
 
 app.post("/signup", async (req, res) => {
     const fields = req.body;
