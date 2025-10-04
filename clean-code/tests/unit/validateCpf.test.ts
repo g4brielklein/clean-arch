@@ -1,4 +1,4 @@
-import { validateCpf } from "../src/utils/validateCpf";
+import { validateCpf } from "../../src/utils/validateCpf";
 
 // Parameterized tests
 test.each([
