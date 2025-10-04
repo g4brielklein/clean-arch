@@ -3,7 +3,7 @@ import Account from '../../domain/Account'
 
 export default interface AccountRepository {
     getAccountByEmail (email: string): Promise<Account | undefined>,
-    getAccountById (id: string): Promise<Account>,
+    getAccountById (id: string): Promise<Account | undefined>,
     saveAccount (account: Account): Promise<void>,
 }
 
@@ -19,13 +19,14 @@ export class AccountRepositoryDatabase implements AccountRepository {
         return new Account(accountData.account_id, accountData.name, accountData.email, accountData.cpf, accountData.password, accountData.car_plate, accountData.is_passenger, accountData.is_driver);
     }
 
-    async getAccountById(id: string): Promise<any> {
-        const [account] = await query({
-            query: 'SELECT account_id, name, email, cpf, car_plate, is_passenger, is_driver FROM ccca.accounts WHERE account_id = $1;',
+    async getAccountById(id: string): Promise<Account | undefined> {
+        const [accountData] = await query({
+            query: 'SELECT * FROM ccca.accounts WHERE account_id = $1;',
             values: [id],
         });
+        if (!accountData) return
 
-        return account;
+        return new Account(accountData.account_id, accountData.name, accountData.email, accountData.cpf, accountData.password, accountData.car_plate, accountData.is_passenger, accountData.is_driver);
     }
 
     async saveAccount(account: Account): Promise<void> {
@@ -46,7 +47,7 @@ export class AccountRepositoryMemory implements AccountRepository {
     }
 
     async getAccountById(accountId: string): Promise<any> {
-        return this.accounts.find((account: any) => account.id === accountId);
+        return this.accounts.find((account: any) => account.accountId === accountId);
     }
 
     async saveAccount(account: Account): Promise<void> {

@@ -1,40 +1,44 @@
 import sinon from 'sinon';
-import { AccountDAOMemory, AccountDAODatabase } from '../src/data';
-import Signup from '../src/application/usecase/Signup';
-import GetAccount from '../src/getAccount';
+import { AccountRepositoryMemory, AccountRepositoryDatabase } from '../../src/infra/repository/AccountRepository';
+import AccountRepository from '../../src/infra/repository/AccountRepository';
+import Signup from '../../src/application/usecase/Signup';
+import GetAccount from '../../src/application/usecase/getAccount';
+
 import { randomUUID } from 'node:crypto';
 
+let accountRepository: AccountRepository;
 let signup: Signup;
 let getAccount: GetAccount;
 
 beforeEach(() => {
-    const accountDAO = new AccountDAOMemory();
-    signup = new Signup(accountDAO);
-    getAccount = new GetAccount(accountDAO);
+    accountRepository = new AccountRepositoryDatabase();
+    signup = new Signup(accountRepository);
+    getAccount = new GetAccount(accountRepository);
     sinon.restore();
 })
 
 test("Should create an account with type passenger", async () => {
     const input = {
-        id: randomUUID(),
         name: 'John Doe',
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321558',
         password: 'Abcd1234',
         isPassenger: true,
+        isDriver: false,
     };
+
     const outputSignup = await signup.execute(input);
     expect(outputSignup.accountId).toBeDefined();
-
     const outputGetAccount = await getAccount.execute(outputSignup.accountId);
     expect(outputGetAccount.name).toBe(input.name);
     expect(outputGetAccount.email).toBe(input.email);
     expect(outputGetAccount.cpf).toBe(input.cpf);
+    expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
+    expect(outputGetAccount.isDriver).toBe(false);
 });
 
 test("Should create an account with type driver", async () => {
     const input = {
-        id: randomUUID(),
         name: 'John Doe',
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321558',
@@ -45,16 +49,16 @@ test("Should create an account with type driver", async () => {
     };
     const outputSignup = await signup.execute(input);
     expect(outputSignup.accountId).toBeDefined();
-
     const outputGetAccount = await getAccount.execute(outputSignup.accountId);
     expect(outputGetAccount.name).toBe(input.name);
     expect(outputGetAccount.email).toBe(input.email);
     expect(outputGetAccount.cpf).toBe(input.cpf);
+    expect(outputGetAccount.isPassenger).toBe(false);
+    expect(outputGetAccount.isDriver).toBe(input.isDriver);
 });
 
 test("Should not create an user with invalid name", async () => {
     const input = {
-        id: randomUUID(),
         name: 'JohnDoe',
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321558',
@@ -70,7 +74,6 @@ test("Should not create an user with invalid name", async () => {
 
 test("Should not create an user with invalid email", async () => {
     const input = {
-        id: randomUUID(),
         name: 'John Doe',
         email: `johndoe${Math.random()}gmail.com`,
         cpf: '97456321558',
@@ -86,7 +89,6 @@ test("Should not create an user with invalid email", async () => {
 
 test("Should not create an user with invalid CPF", async () => {
     const input = {
-        id: randomUUID(),
         name: 'John Doe',
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321557',
@@ -102,7 +104,6 @@ test("Should not create an user with invalid CPF", async () => {
 
 test("Should not create an user with invalid password", async () => {
     const input = {
-        id: randomUUID(),
         name: 'John Doe',
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321558',
@@ -116,15 +117,14 @@ test("Should not create an user with invalid password", async () => {
     });
 });
 
-// Test patterns
+// // Test patterns
 
 test("Should create an account using fake", async () => {
-    const accountDAO = new AccountDAOMemory();
-    const signup = new Signup(accountDAO);
-    const getAccount = new GetAccount(accountDAO);
+    const accountRepository = new AccountRepositoryMemory();
+    const signup = new Signup(accountRepository);
+    const getAccount = new GetAccount(accountRepository);
 
     const input = {
-        id: randomUUID(),
         name: 'John Doe',
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321558',
@@ -142,10 +142,9 @@ test("Should create an account using fake", async () => {
 });
 
 test("Should create an account using spy", async () => {
-    const saveAccountSpy = sinon.spy(AccountDAOMemory.prototype, "saveAccount");
-    const getAccountSpy = sinon.spy(AccountDAOMemory.prototype, "getAccountById");
+    const saveAccountSpy = sinon.spy(accountRepository, "saveAccount");
+    const getAccountSpy = sinon.spy(accountRepository, "getAccountById");
     const input = {
-        id: randomUUID(),
         name: 'John Doe',
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321558',
@@ -155,33 +154,33 @@ test("Should create an account using spy", async () => {
 
     const outputSignup = await signup.execute(input);
     expect(outputSignup.accountId).toBeDefined();
-
     const outputGetAccount = await getAccount.execute(outputSignup.accountId);
     expect(outputGetAccount.name).toBe(input.name);
     expect(outputGetAccount.email).toBe(input.email);
     expect(outputGetAccount.cpf).toBe(input.cpf);
-
+    expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
     expect(saveAccountSpy.calledOnce).toBe(true);
     expect(getAccountSpy.calledWith(outputSignup.accountId)).toBe(true);
 });
 
 test("Should create an account using stub", async () => {
-    const accountDAO = new AccountDAODatabase();
-    signup = new Signup(accountDAO);
-    getAccount = new GetAccount(accountDAO);
+    const accountRepository = new AccountRepositoryDatabase();
+    signup = new Signup(accountRepository);
+    getAccount = new GetAccount(accountRepository);
 
-    const input = {
-        id: randomUUID(),
+    const input: any = {
         name: 'John Doe',
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321558',
         password: 'Abcd1234',
-        isPassenger: true,
+        carPlate: 'IOG5C22',
+        isPassenger: false,
+        isDriver: true,
     };
 
-    sinon.stub(AccountDAODatabase.prototype, "saveAccount").resolves();
-    sinon.stub(AccountDAODatabase.prototype, "getAccountByEmail").resolves();
-    sinon.stub(AccountDAODatabase.prototype, "getAccountById").resolves(input);
+    sinon.stub(AccountRepositoryDatabase.prototype, "saveAccount").resolves();
+    sinon.stub(AccountRepositoryDatabase.prototype, "getAccountByEmail").resolves();
+    sinon.stub(AccountRepositoryDatabase.prototype, "getAccountById").resolves(input);
 
     const outputSignup = await signup.execute(input);
     expect(outputSignup.accountId).toBeDefined();
@@ -191,12 +190,13 @@ test("Should create an account using stub", async () => {
     expect(outputGetAccount.email).toBe(input.email);
     expect(outputGetAccount.cpf).toBe(input.cpf);
     expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
+    expect(outputGetAccount.isDriver).toBe(input.isDriver);
 });
 
 test("Should create an account using mock", async () => {
-    const accountDAO = new AccountDAODatabase();
-    signup = new Signup(accountDAO);
-    getAccount = new GetAccount(accountDAO);
+    const accountRepository = new AccountRepositoryDatabase();
+    signup = new Signup(accountRepository);
+    getAccount = new GetAccount(accountRepository);
     
     const input = {
         id: randomUUID(),
@@ -207,7 +207,7 @@ test("Should create an account using mock", async () => {
         isPassenger: true,
     };
 
-    const accountDAOMock = sinon.mock(AccountDAODatabase.prototype);
+    const accountDAOMock = sinon.mock(AccountRepositoryDatabase.prototype);
 
     accountDAOMock.expects("saveAccount").once().resolves();
     accountDAOMock.expects("getAccountByEmail").once().resolves();
