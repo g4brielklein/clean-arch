@@ -15,13 +15,13 @@ export default class Account {
         readonly isPassenger: boolean,
         readonly isDriver: boolean,
     ) {
-        if (!name?.match(/[a-zA-Z] [a-zA-Z]+/)) {
+        if (!this.validateName(name)) {
             throw new InvalidFieldError("Invalid name", {
                 errorCode: -3
             });
         }
 
-        if (!email?.match(/^(.+)@(.+)$/)) {
+        if (!this.validateEmail(email)) {
             throw new InvalidFieldError("Invalid email", {
                 errorCode: -2
             });
@@ -49,6 +49,14 @@ export default class Account {
                 errorCode: -6
             });
         }
+    }
+
+    validateName (name: string) {
+        return name?.match(/[a-zA-Z] [a-zA-Z]+/);
+    }
+
+    validateEmail (email: string) {
+        return email?.match(/^(.+)@(.+)$/);
     }
 
     // Static factory method
