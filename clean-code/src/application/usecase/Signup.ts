@@ -1,10 +1,11 @@
 import Account from '../../domain/Account';
 import { ResourceAlreadyExistsError } from '../../infra/errors';
-
 import AccountRepository from '../../infra/repository/AccountRepository';
+import { inject } from '../../infra/di/Registry';
 
 export default class Signup {
-    constructor(readonly accountRepository: AccountRepository) {}
+    @inject("accountRepository")
+    accountRepository!: AccountRepository
 
     execute = async (fields: any) => {
         const account = Account.create(fields.name, fields.email, fields.cpf, fields.password, fields.carPlate, fields.isPassenger, fields.isDriver);
