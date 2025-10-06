@@ -1,6 +1,7 @@
 import sinon from 'sinon';
 import { AccountRepositoryMemory, AccountRepositoryDatabase } from '../../src/infra/repository/AccountRepository';
 import AccountRepository from '../../src/infra/repository/AccountRepository';
+import Registry from '../../src/infra/di/Registry';
 import Signup from '../../src/application/usecase/Signup';
 import GetAccount from '../../src/application/usecase/getAccount';
 
@@ -12,8 +13,9 @@ let getAccount: GetAccount;
 
 beforeEach(() => {
     accountRepository = new AccountRepositoryDatabase();
-    signup = new Signup(accountRepository);
-    getAccount = new GetAccount(accountRepository);
+    Registry.getInstance().provide("accountRepository", accountRepository);
+    signup = new Signup();
+    getAccount = new GetAccount();
     sinon.restore();
 })
 
@@ -121,8 +123,9 @@ test("Should not create an user with invalid password", async () => {
 
 test("Should create an account using fake", async () => {
     const accountRepository = new AccountRepositoryMemory();
-    const signup = new Signup(accountRepository);
-    const getAccount = new GetAccount(accountRepository);
+    Registry.getInstance().provide("accountRepository", accountRepository);
+    const signup = new Signup();
+    const getAccount = new GetAccount();
 
     const input = {
         name: 'John Doe',
@@ -165,8 +168,9 @@ test("Should create an account using spy", async () => {
 
 test("Should create an account using stub", async () => {
     const accountRepository = new AccountRepositoryDatabase();
-    signup = new Signup(accountRepository);
-    getAccount = new GetAccount(accountRepository);
+    Registry.getInstance().provide("accountRepository", accountRepository);
+    signup = new Signup();
+    getAccount = new GetAccount();
 
     const input: any = {
         name: 'John Doe',
@@ -195,8 +199,9 @@ test("Should create an account using stub", async () => {
 
 test("Should create an account using mock", async () => {
     const accountRepository = new AccountRepositoryDatabase();
-    signup = new Signup(accountRepository);
-    getAccount = new GetAccount(accountRepository);
+    Registry.getInstance().provide("accountRepository", accountRepository);
+    signup = new Signup();
+    getAccount = new GetAccount();
     
     const input = {
         id: randomUUID(),
