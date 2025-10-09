@@ -1,7 +1,7 @@
 import { randomUUID } from 'crypto';
 import { InvalidFieldError } from '../infra/errors';
-import { validatePassword } from '../utils/validatePassword';
-import { validateCpf } from '../utils/validateCpf';
+import { validatePassword } from './validatePassword';
+import { validateCpf } from './validateCpf';
 
 // Entity
 export default class Account {

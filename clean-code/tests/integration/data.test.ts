@@ -1,7 +1,18 @@
 import { AccountRepositoryDatabase } from '../../src/infra/repository/AccountRepository';
+import AccountRepository from '../../src/infra/repository/AccountRepository';
 import Account from '../../src/domain/Account'
+import DatabaseConnection, { PgPromiseAdapter } from '../../src/infra/database/DatabaseConnection';
+import Registry from '../../src/infra/di/Registry';
 
-const accountRepository = new AccountRepositoryDatabase();
+let databaseConnection: DatabaseConnection;
+let accountRepository: AccountRepository;
+
+beforeEach(() => {
+    databaseConnection = new PgPromiseAdapter();
+    Registry.getInstance().provide("databaseConnection", databaseConnection);
+    accountRepository = new AccountRepositoryDatabase();
+    Registry.getInstance().provide("accountRepository", accountRepository);
+})
 
 test("Should save an account", async () => {
     const account = Account.create(
@@ -27,3 +38,7 @@ test("Should save an account", async () => {
     expect(outputGetById?.cpf).toBe(account.cpf);
     expect(outputGetById?.isPassenger).toBe(account.isPassenger);
 });
+
+afterEach(async () => {
+    await databaseConnection.close();
+})

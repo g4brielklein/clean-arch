@@ -1,5 +1,6 @@
-import { query } from '../database';
 import Account from '../../domain/Account'
+import { inject } from '../di/Registry';
+import DatabaseConnection from '../database/DatabaseConnection';
 
 export default interface AccountRepository {
     getAccountByEmail (email: string): Promise<Account | undefined>,
@@ -8,8 +9,11 @@ export default interface AccountRepository {
 }
 
 export class AccountRepositoryDatabase implements AccountRepository {
+    @inject("databaseConnection")
+    databaseConnection!: DatabaseConnection;
+
     async getAccountByEmail(email: string): Promise<Account | undefined> {
-        const [accountData] = await query({
+        const [accountData] = await this.databaseConnection.query({
             query: 'SELECT * FROM ccca.accounts WHERE email = $1;',
             values: [email],
         });
@@ -20,7 +24,7 @@ export class AccountRepositoryDatabase implements AccountRepository {
     }
 
     async getAccountById(id: string): Promise<Account | undefined> {
-        const [accountData] = await query({
+        const [accountData] = await this.databaseConnection.query({
             query: 'SELECT * FROM ccca.accounts WHERE account_id = $1;',
             values: [id],
         });
@@ -32,7 +36,7 @@ export class AccountRepositoryDatabase implements AccountRepository {
     async saveAccount(account: Account): Promise<void> {
         const { accountId, name, email, cpf, carPlate, isPassenger, isDriver, password } = account;
 
-        await query({
+        await this.databaseConnection.query({
             query: 'INSERT INTO ccca.accounts (account_id, name, email, cpf, car_plate, is_passenger, is_driver, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);',
             values: [accountId, name, email, cpf, carPlate, !!isPassenger, !!isDriver, password],
         });
