@@ -4,14 +4,17 @@ import AccountRepository from '../../src/infra/repository/AccountRepository';
 import Registry from '../../src/infra/di/Registry';
 import Signup from '../../src/application/usecase/Signup';
 import GetAccount from '../../src/application/usecase/getAccount';
-
+import DatabaseConnection, { PgPromiseAdapter } from '../../src/infra/database/DatabaseConnection';
 import { randomUUID } from 'node:crypto';
 
+let databaseConnection: DatabaseConnection
 let accountRepository: AccountRepository;
 let signup: Signup;
 let getAccount: GetAccount;
 
 beforeEach(() => {
+    databaseConnection = new PgPromiseAdapter();
+    Registry.getInstance().provide("databaseConnection", databaseConnection);
     accountRepository = new AccountRepositoryDatabase();
     Registry.getInstance().provide("accountRepository", accountRepository);
     signup = new Signup();
@@ -228,3 +231,7 @@ test("Should create an account using mock", async () => {
 
     accountDAOMock.verify();
 });
+
+afterEach(async () => {
+    await databaseConnection.close();
+})
