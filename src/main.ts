@@ -4,7 +4,7 @@ import { ExpressAdapter } from "./infra/http/HttpServer";
 import { PgPromiseAdapter } from "./infra/database/DatabaseConnection";
 import Registry from "./infra/di/Registry";
 import Signup from "./application/usecase/Signup";
-import GetAccount from "./application/usecase/getAccount";
+import GetAccount from "./application/usecase/GetAccount";
 const PORT = 3000;
 
 // Main - Composition Root

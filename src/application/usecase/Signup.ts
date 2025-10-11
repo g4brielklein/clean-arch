@@ -1,7 +1,7 @@
-import Account from '../../domain/Account';
-import { ResourceAlreadyExistsError } from '../../infra/errors';
-import AccountRepository from '../../infra/repository/AccountRepository';
 import { inject } from '../../infra/di/Registry';
+import Account from '../../domain/Account';
+import AccountRepository from '../../infra/repository/AccountRepository';
+import { ResourceAlreadyExistsError } from '../../infra/errors';
 
 export default class Signup {
     @inject("accountRepository")

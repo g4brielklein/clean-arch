@@ -1,7 +1,7 @@
 import { inject } from "../di/Registry";
 import HttpServer from "../http/HttpServer";
 import Signup from "../../application/usecase/Signup";
-import GetAccount from "../../application/usecase/getAccount";
+import GetAccount from "../../application/usecase/GetAccount";
 
 // Interface Adapter
 export default class AccountController {
