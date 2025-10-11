@@ -1,7 +1,7 @@
-import AccountRepository from '../../infra/repository/AccountRepository';
+import { inject } from '../../infra/di/Registry';
 import { validate } from 'uuid';
 import { ResourceNotFoundError } from '../../infra/errors';
-import { inject } from '../../infra/di/Registry';
+import AccountRepository from '../../infra/repository/AccountRepository';
 
 export default class GetAccount {
     @inject("accountRepository")
