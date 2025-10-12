@@ -22,7 +22,7 @@ CREATE TABLE ccca.rides (
 	distance numeric,
 	from_lat numeric,
 	from_long numeric,
-	to_let numeric,
+	to_lat numeric,
 	to_long numeric,
 	date timestamp
 );
