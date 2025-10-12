@@ -11,8 +11,9 @@ export default class RequestRide {
 
     execute = async (input: Input): Promise<Output> => {
         const account = await this.accountRepository.getAccountById(input.passengerId);
-        if (!account || !account.isPassenger) throw new Error("Requester must be a passengeer");
-        // const hasActiveRide = await this.rideRepository.
+        if (!account || !account.isPassenger) throw new Error("Requester must be a passenger");
+        const hasActiveRide = await this.rideRepository.hasActiveRideByPassengerId(account.accountId);
+        if (hasActiveRide) throw new Error("Requester already has an active ride");
         const ride = Ride.create(input.passengerId, input.fromLat, input.fromLong, input.toLat, input.toLong);
         await this.rideRepository.saveRide(ride);
         return {
