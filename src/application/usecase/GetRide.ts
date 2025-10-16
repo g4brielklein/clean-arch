@@ -25,6 +25,7 @@ export default class GetRide {
 type Output = {
     rideId: string,
     passengerId: string,
+    driverId?: string,
     fromLat: number,
     fromLong: number,
     toLat: number,

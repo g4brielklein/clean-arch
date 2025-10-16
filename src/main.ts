@@ -1,6 +1,6 @@
 import { AccountRepositoryDatabase, AccountRepositoryMemory } from "./infra/repository/AccountRepository";
 import AccountController from "./infra/controller/AccountController";
-import { ExpressAdapter } from "./infra/http/HttpServer";
+import { ExpressAdapter, HapiAdapter } from "./infra/http/HttpServer";
 import { PgPromiseAdapter } from "./infra/database/DatabaseConnection";
 import Registry from "./infra/di/Registry";
 import Signup from "./application/usecase/Signup";
