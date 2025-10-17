@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "nodemon src/main.ts",
     "test": "npx jest",
+    "test:watch": "npx jest --watch",
     "docker:start": "docker compose up -d",
     "docker:stop": "docker compose stop",
     "docker:clean": "docker compose rm -fsv"
