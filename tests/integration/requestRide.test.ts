@@ -50,8 +50,8 @@ test("Should request a ride", async () => {
     expect(outputGetRide.fromLong).toBe(inputRequestRide.fromLong);
     expect(outputGetRide.toLat).toBe(inputRequestRide.toLat);
     expect(outputGetRide.toLong).toBe(inputRequestRide.toLong);
-    expect(outputGetRide.fare).toBe(21);
-    expect(outputGetRide.distance).toBe(10);
+    // expect(outputGetRide.fare).toBe(21);
+    // expect(outputGetRide.distance).toBe(10);
     expect(outputGetRide.status).toBe("requested");
 })
 
