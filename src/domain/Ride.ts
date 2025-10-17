@@ -1,21 +1,24 @@
 import { randomUUID } from 'node:crypto';
 
 export default class Ride {
+    private driverId?: string;
+
     constructor (
         readonly rideId: string,
         readonly passengerId: string,
-        readonly driverId: string | null,
+        driverId: string | null,
         readonly fromLat: number,
         readonly fromLong: number,
         readonly toLat: number,
         readonly toLong: number,
-        readonly fare: number,
-        readonly distance: number,
-        readonly status: string,
+        private fare: number,
+        private distance: number,
+        private status: string,
         readonly date: Date
     ) {
         if (fromLat < -90 || fromLat > 90 || toLat < -90 || toLat > 90) throw new Error("Invalid latitude");
         if (fromLong < -180 || fromLong > 180 || toLong < -180 || toLong > 180) throw new Error("Invalid latitude");
+        if (driverId) this.setDriverId(driverId);
     }
 
     static create (
@@ -52,5 +55,42 @@ export default class Ride {
     calculateFare () {
         const distance = this.calculateDistance();
         return distance * 2.1;
+    }
+
+    setDriverId (driverId: string) {
+        this.driverId = driverId;
+    }
+
+    getDriverId () {
+        return this.driverId;
+    }
+
+    setFare (fare: number) {
+        this.fare = fare;
+    };
+
+    getFare () {
+        return this.fare;
+    }
+
+    setDistance (distance: number) {
+        this.distance = distance;
+    }
+
+    getDistance () {
+        return this.distance;
+    }
+
+    setStatus (status: string) {
+        this.status = status;
+    }
+
+    getStatus () {
+        return this.status;
+    }
+
+    accept (driverId: string) {
+        this.setStatus('accepted');
+        this.setDriverId(driverId);
     }
 }
