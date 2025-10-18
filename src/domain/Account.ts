@@ -1,41 +1,35 @@
 import { randomUUID } from 'crypto';
 import { InvalidFieldError } from '../infra/errors';
 import { validatePassword } from './validatePassword';
-import { validateCpf } from './validateCpf';
+import Name from './vo/Name';
+import Email from './vo/Email';
+import Cpf from './vo/Cpf';
 
-// Entity
+// Aggregate made from an Entity "Account" and VOs (UUID, Name, Email, Cpf, CarPlate, Pasword)
+// All Aggregates have an Aggregate Root <AR>, and it is the Entity that "leads" the Aggregate
+// Entity (Because it has an id and can suffer state mutation)
 export default class Account {
+    private name: Name
+    private email: Email;
+    private cpf: Cpf;
+
     constructor (
         readonly accountId: string,
-        readonly name: string,
-        readonly email: string,
-        readonly cpf: string,
+        name: string,
+        email: string,
+        cpf: string,
         readonly password: string,
         readonly carPlate: string,
         readonly isPassenger: boolean,
         readonly isDriver: boolean,
     ) {
-        if (!this.validateName(name)) {
-            throw new InvalidFieldError("Invalid name", {
-                errorCode: -3
-            });
-        }
-
-        if (!this.validateEmail(email)) {
-            throw new InvalidFieldError("Invalid email", {
-                errorCode: -2
-            });
-        }
+        this.name = new Name(name);
+        this.cpf = new Cpf(cpf);
+        this.email = new Email(email);
 
         if (!validatePassword(password)) {
             throw new InvalidFieldError("Invalid password", {
                 errorCode: -5
-            });
-        }
-
-        if (!validateCpf(cpf)) {
-            throw new InvalidFieldError("Invalid CPF", {
-                errorCode: -1
             });
         }
 
@@ -51,12 +45,28 @@ export default class Account {
         }
     }
 
-    validateName (name: string) {
-        return name?.match(/[a-zA-Z] [a-zA-Z]+/);
+    setCpf (cpf: string) {
+        this.cpf = new Cpf(cpf);
     }
 
-    validateEmail (email: string) {
-        return email?.match(/^(.+)@(.+)$/);
+    getCpf () {
+        return this.cpf.getValue();
+    }
+
+    setName (name: string) {
+        this.name = new Name(name);
+    }
+
+    getName () {
+        return this.name.getValue();
+    }
+
+    setEmail (email: string) {
+        this.email = new Email(email);
+    }
+    
+    getEmail () {
+        return this.email.getValue();
     }
 
     // Static factory method
@@ -70,7 +80,6 @@ export default class Account {
         isDriver: boolean,
     ) {
         const accountId = randomUUID();
-        const formattedCpf = cpf.replace(/\D/g,'');
-        return new Account(accountId, name, email, formattedCpf, password, carPlate, isPassenger, isDriver);
+        return new Account(accountId, name, email, cpf, password, carPlate, isPassenger, isDriver);
     }
 }
