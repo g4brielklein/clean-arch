@@ -2,11 +2,13 @@ import Ride from "../../domain/Ride";
 import { inject } from "../di/Registry";
 import DatabaseConnection from "../database/DatabaseConnection";
 
+// Interface Adapter
 export default interface RideRepository {
     saveRide (ride: Ride): Promise<void>;
     getRideById (rideId: string): Promise<Ride>;
     hasActiveRideByPassengerId (passengerId: string): Promise<boolean>;
     updateRide(ride: Ride): Promise<void>;
+    updateRideStatus(ride: Ride): Promise<void>;
 }
 
 export class RideRepositoryDatabase implements RideRepository {
@@ -16,7 +18,7 @@ export class RideRepositoryDatabase implements RideRepository {
     async saveRide(ride: Ride): Promise<void> {
         await this.connection.query({
             query: 'INSERT INTO ccca.rides (ride_id, passenger_id, driver_id, from_lat, from_long, to_lat, to_long, fare, distance, status, date) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11);',
-            values: [ride.rideId, ride.passengerId, ride.getDriverId(), ride.fromLat, ride.fromLong, ride.toLat, ride.toLong, ride.getFare(), ride.getDistance(), ride.getStatus(), ride.date],
+            values: [ride.getRideId(), ride.getPassengerId(), ride.getDriverId(), ride.fromLat, ride.fromLong, ride.toLat, ride.toLong, ride.getFare(), ride.getDistance(), ride.getStatus(), ride.date],
         });
     };
 
@@ -41,7 +43,14 @@ export class RideRepositoryDatabase implements RideRepository {
     async updateRide(ride: Ride): Promise<void> {
         await this.connection.query({
             query: "UPDATE ccca.rides SET status = $1, driver_id = $2, distance = $4, fare = $4 WHERE ride_id = $5;",
-            values: [ride.getStatus(), ride.getDriverId(), ride.getDistance(), ride.getFare(), ride.rideId],
+            values: [ride.getStatus(), ride.getDriverId(), ride.getDistance(), ride.getFare(), ride.getRideId()],
+        });
+    }
+
+    async updateRideStatus(ride: Ride): Promise<void> {
+        await this.connection.query({
+            query: "UPDATE ccca.rides SET status = $1 WHERE ride_id = $2;",
+            values: [ride.getStatus(), ride.getRideId()],
         });
     }
 }
