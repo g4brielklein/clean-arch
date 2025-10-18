@@ -22,14 +22,12 @@ export class InvalidFieldError extends Error {
 
 export class InternalServerError extends Error {
     statusCode: number;
-    cause: any;
 
-    constructor({ cause }) {
+    constructor() {
         super("Internal Server Error");
 
         this.name = "InternalServerError";
         this.statusCode = 500;
-        this.cause = cause;
     }
 
     toJSON() {

@@ -27,7 +27,7 @@ export class ExpressAdapter implements HttpServer {
                     return res.status(err.statusCode).json(err);
                 }
 
-                const error = new InternalServerError({ cause: err });
+                const error = new InternalServerError();
                 res.status(error.statusCode).json(error);
             }
         });
@@ -63,7 +63,7 @@ export class HapiAdapter implements HttpServer {
                         return reply.response(errorReturn).code(err.statusCode);
                     }
 
-                    const error = new InternalServerError({ cause: err });
+                    const error = new InternalServerError();
                     return reply.response({
                         status_code: error.statusCode,
                     }).code(error.statusCode);
