@@ -8,8 +8,8 @@ export default class GetRide {
     execute = async (rideId: string): Promise<Output> => {
         const ride = await this.rideRepository.getRideById(rideId);
         return {
-            rideId: ride.rideId,
-            passengerId: ride.passengerId,
+            rideId: ride.getRideId(),
+            passengerId: ride.getPassengerId(),
             driverId: ride.getDriverId(),
             fromLat: ride.fromLat,
             fromLong: ride.fromLong,

@@ -1,11 +1,13 @@
-import { randomUUID } from 'node:crypto';
+import UUID from './vo/UUID';
 
 export default class Ride {
-    private driverId?: string;
+    private rideId: UUID;
+    private passengerId: UUID;
+    private driverId?: UUID;
 
     constructor (
-        readonly rideId: string,
-        readonly passengerId: string,
+        rideId: string,
+        passengerId: string,
         driverId: string | null,
         readonly fromLat: number,
         readonly fromLong: number,
@@ -16,9 +18,11 @@ export default class Ride {
         private status: string,
         readonly date: Date
     ) {
+        this.rideId = new UUID(rideId);
+        this.passengerId = new UUID(passengerId);
+        if (driverId) this.driverId = new UUID(driverId);
         if (fromLat < -90 || fromLat > 90 || toLat < -90 || toLat > 90) throw new Error("Invalid latitude");
         if (fromLong < -180 || fromLong > 180 || toLong < -180 || toLong > 180) throw new Error("Invalid latitude");
-        if (driverId) this.setDriverId(driverId);
     }
 
     static create (
@@ -28,7 +32,7 @@ export default class Ride {
         toLat: number,
         toLong: number
     ) {
-        const rideId = randomUUID();
+        const rideId = UUID.create().getValue();
         const status = "requested";
         const date = new Date();
         const fare = 0;
@@ -52,17 +56,20 @@ export default class Ride {
         return Math.round(distance);
     }
 
-    calculateFare () {
-        const distance = this.calculateDistance();
-        return distance * 2.1;
+    getRideId () {
+        return this.rideId.getValue();
+    }
+
+    getPassengerId () {
+        return this.passengerId.getValue();
     }
 
     setDriverId (driverId: string) {
-        this.driverId = driverId;
+        this.driverId = new UUID(driverId);
     }
 
     getDriverId () {
-        return this.driverId;
+        return this.driverId?.getValue();
     }
 
     setFare (fare: number) {
@@ -89,8 +96,19 @@ export default class Ride {
         return this.status;
     }
 
+    calculateFare () {
+        const distance = this.calculateDistance();
+        return distance * 2.1;
+    }
+
     accept (driverId: string) {
+        if (this.getStatus() !== 'requested') throw new Error(`Ride with id ${this.rideId} has invalid status to be accepted`);
         this.setStatus('accepted');
         this.setDriverId(driverId);
+    }
+
+    start () {
+        if (this.getStatus() !== 'accepted') throw new Error(`Ride with id ${this.rideId} has invalid status to be started`);
+        this.setStatus('in_progress');
     }
 }

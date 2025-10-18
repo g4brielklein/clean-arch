@@ -27,15 +27,15 @@ test("Should save an account", async () => {
 
     await accountRepository.saveAccount(account);
 
-    const outputGetByEmail = await accountRepository.getAccountByEmail(account.email);
-    expect(outputGetByEmail?.name).toBe(account.name);
-    expect(outputGetByEmail?.email).toBe(account.email);
-    expect(outputGetByEmail?.cpf).toBe(account.cpf);
+    const outputGetByEmail = await accountRepository.getAccountByEmail(account.getEmail());
+    expect(outputGetByEmail?.getName()).toBe(account.getName());
+    expect(outputGetByEmail?.getEmail()).toBe(account.getEmail());
+    expect(outputGetByEmail?.getCpf()).toBe(account.getCpf());
     expect(outputGetByEmail?.isPassenger).toBe(account.isPassenger);
     const outputGetById = await accountRepository.getAccountById(account.accountId);
-    expect(outputGetById?.name).toBe(account.name);
-    expect(outputGetById?.email).toBe(account.email);
-    expect(outputGetById?.cpf).toBe(account.cpf);
+    expect(outputGetById?.getName()).toBe(account.getName());
+    expect(outputGetById?.getEmail()).toBe(account.getEmail());
+    expect(outputGetById?.getCpf()).toBe(account.getCpf());
     expect(outputGetById?.isPassenger).toBe(account.isPassenger);
 });
 

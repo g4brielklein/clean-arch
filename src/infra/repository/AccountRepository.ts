@@ -34,11 +34,9 @@ export class AccountRepositoryDatabase implements AccountRepository {
     }
 
     async saveAccount(account: Account): Promise<void> {
-        const { accountId, name, email, cpf, carPlate, isPassenger, isDriver, password } = account;
-
         await this.databaseConnection.query({
             query: 'INSERT INTO ccca.accounts (account_id, name, email, cpf, car_plate, is_passenger, is_driver, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);',
-            values: [accountId, name, email, cpf, carPlate, !!isPassenger, !!isDriver, password],
+            values: [account.accountId, account.getName(), account.getEmail(), account.getCpf(), account.carPlate, !!account.isPassenger, !!account.isDriver, account.password],
         });
     }
 }

@@ -6,6 +6,7 @@ import Signup from '../../src/application/usecase/Signup';
 import GetAccount from '../../src/application/usecase/GetAccount';
 import DatabaseConnection, { PgPromiseAdapter } from '../../src/infra/database/DatabaseConnection';
 import { randomUUID } from 'node:crypto';
+import Account from '../../src/domain/Account';
 
 let databaseConnection: DatabaseConnection
 let accountRepository: AccountRepository;
@@ -187,7 +188,7 @@ test("Should create an account using stub", async () => {
 
     sinon.stub(AccountRepositoryDatabase.prototype, "saveAccount").resolves();
     sinon.stub(AccountRepositoryDatabase.prototype, "getAccountByEmail").resolves();
-    sinon.stub(AccountRepositoryDatabase.prototype, "getAccountById").resolves(input);
+    sinon.stub(AccountRepositoryDatabase.prototype, "getAccountById").resolves(Account.create(input.name, input.email, input.cpf, input.password, input.carPlate, input.isPassenger, input.isDriver));
 
     const outputSignup = await signup.execute(input);
     expect(outputSignup.accountId).toBeDefined();
@@ -212,7 +213,9 @@ test("Should create an account using mock", async () => {
         email: `johndoe${Math.random()}@gmail.com`,
         cpf: '97456321558',
         password: 'Abcd1234',
+        carPlate: "",
         isPassenger: true,
+        isDriver: false
     };
 
     const accountDAOMock = sinon.mock(AccountRepositoryDatabase.prototype);
@@ -222,7 +225,7 @@ test("Should create an account using mock", async () => {
     const outputSignup = await signup.execute(input);
     expect(outputSignup.accountId).toBeDefined();
 
-    accountDAOMock.expects("getAccountById").once().withArgs(outputSignup.accountId).resolves(input);
+    accountDAOMock.expects("getAccountById").once().withArgs(outputSignup.accountId).resolves(Account.create(input.name, input.email, input.cpf, input.password, input.carPlate, input.isPassenger, input.isDriver));
     const outputGetAccount = await getAccount.execute(outputSignup.accountId);
     expect(outputGetAccount.name).toBe(input.name);
     expect(outputGetAccount.email).toBe(input.email);
