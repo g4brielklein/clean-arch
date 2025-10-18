@@ -1,56 +1,42 @@
-import { randomUUID } from 'crypto';
-import { InvalidFieldError } from '../infra/errors';
-import { validatePassword } from './validatePassword';
 import Name from './vo/Name';
 import Email from './vo/Email';
 import Cpf from './vo/Cpf';
+import Password from './vo/Password';
+import CarPlate from './vo/CarPlate';
+import UUID from './vo/UUID';
 
-// Aggregate made from an Entity "Account" and VOs (UUID, Name, Email, Cpf, CarPlate, Pasword)
+// Aggregate made from an Entity "Account" and VOs (UUID, Name, Email, Cpf, CarPlate, Password)
 // All Aggregates have an Aggregate Root <AR>, and it is the Entity that "leads" the Aggregate
 // Entity (Because it has an id and can suffer state mutation)
 export default class Account {
-    private name: Name
+    // VOs (Has one or more values, it's imutable)
+    private accountId: UUID;
+    private name: Name;
     private email: Email;
     private cpf: Cpf;
+    private password: Password;
+    private carPlate?: CarPlate;
 
     constructor (
-        readonly accountId: string,
+        accountId: string,
         name: string,
         email: string,
         cpf: string,
-        readonly password: string,
-        readonly carPlate: string,
+        password: string,
+        carPlate: string,
         readonly isPassenger: boolean,
         readonly isDriver: boolean,
     ) {
+        this.accountId = new UUID(accountId);
         this.name = new Name(name);
-        this.cpf = new Cpf(cpf);
         this.email = new Email(email);
-
-        if (!validatePassword(password)) {
-            throw new InvalidFieldError("Invalid password", {
-                errorCode: -5
-            });
-        }
-
-        if (!isDriver) return;
-
-        if (
-            !carPlate?.match(/[A-Z]{3}[0-9]{4}/) &&
-            !carPlate?.match(/[A-Z]{3}[0-9]{1}[A-Z]{1}[0-9]{2}/) // new plate format
-        ) {
-            throw new InvalidFieldError("Invalid car plate", {
-                errorCode: -6
-            });
-        }
-    }
-
-    setCpf (cpf: string) {
         this.cpf = new Cpf(cpf);
+        this.password = new Password(password);
+        if (isDriver) this.carPlate = new CarPlate(carPlate);
     }
 
-    getCpf () {
-        return this.cpf.getValue();
+    getAccountId () {
+        return this.accountId.getValue();
     }
 
     setName (name: string) {
@@ -69,6 +55,30 @@ export default class Account {
         return this.email.getValue();
     }
 
+    setCpf (cpf: string) {
+        this.cpf = new Cpf(cpf);
+    }
+
+    getCpf () {
+        return this.cpf.getValue();
+    }
+
+    setPassword (password: string) {
+        this.password = new Password(password);
+    }
+
+    getPassword () {
+        return this.password.getValue();
+    }
+
+    setCarPlate (carPlate: string) {
+        this.carPlate = new CarPlate(carPlate);
+    }
+
+    getCarPlate () {
+        return this.carPlate?.getValue();
+    }
+
     // Static factory method
     static create (
         name: string,
@@ -79,7 +89,7 @@ export default class Account {
         isPassenger: boolean,
         isDriver: boolean,
     ) {
-        const accountId = randomUUID();
+        const accountId = UUID.create().getValue();
         return new Account(accountId, name, email, cpf, password, carPlate, isPassenger, isDriver);
     }
 }

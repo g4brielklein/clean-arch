@@ -1,5 +1,4 @@
 import AcceptRide from "../../src/application/usecase/AcceptRide";
-import GetAccount from "../../src/application/usecase/GetAccount";
 import GetRide from "../../src/application/usecase/GetRide";
 import RequestRide from "../../src/application/usecase/RequestRide";
 import Signup from "../../src/application/usecase/Signup";

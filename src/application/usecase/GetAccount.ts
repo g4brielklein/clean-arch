@@ -14,12 +14,12 @@ export default class GetAccount {
 
         if (!account) throw new ResourceNotFoundError(`AccountId ${accountId} not found`, { errorCode: -7 });
         return {
-            accountId: account.accountId,
+            accountId: account.getAccountId(),
             name: account.getName(),
             email: account.getEmail(),
             cpf: account.getCpf(),
-            password: account.password,
-            carPlate: account.carPlate,
+            password: account.getPassword(),
+            carPlate: account.getCarPlate(),
             isPassenger: account.isPassenger,
             isDriver: account.isDriver,
         };

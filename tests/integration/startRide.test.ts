@@ -18,17 +18,17 @@ let acceptRide: AcceptRide;
 let startRide: StartRide;
 
 beforeEach(() => {
-        databaseConnection = new PgPromiseAdapter();
-        Registry.getInstance().provide("databaseConnection", databaseConnection);
-        accountRepository = new AccountRepositoryDatabase();
-        Registry.getInstance().provide("accountRepository", accountRepository);
-        rideRepository = new RideRepositoryDatabase();
-        Registry.getInstance().provide("rideRepository", rideRepository);
-        signup = new Signup();
-        requestRide = new RequestRide();
-        getRide = new GetRide();
-        acceptRide = new AcceptRide();
-        startRide = new StartRide();
+    databaseConnection = new PgPromiseAdapter();
+    Registry.getInstance().provide("databaseConnection", databaseConnection);
+    accountRepository = new AccountRepositoryDatabase();
+    Registry.getInstance().provide("accountRepository", accountRepository);
+    rideRepository = new RideRepositoryDatabase();
+    Registry.getInstance().provide("rideRepository", rideRepository);
+    signup = new Signup();
+    requestRide = new RequestRide();
+    getRide = new GetRide();
+    acceptRide = new AcceptRide();
+    startRide = new StartRide();
 })
 
 test("Should start a ride", async () => {
