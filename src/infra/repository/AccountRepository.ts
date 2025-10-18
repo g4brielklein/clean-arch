@@ -36,7 +36,7 @@ export class AccountRepositoryDatabase implements AccountRepository {
     async saveAccount(account: Account): Promise<void> {
         await this.databaseConnection.query({
             query: 'INSERT INTO ccca.accounts (account_id, name, email, cpf, car_plate, is_passenger, is_driver, password) VALUES ($1, $2, $3, $4, $5, $6, $7, $8);',
-            values: [account.accountId, account.getName(), account.getEmail(), account.getCpf(), account.carPlate, !!account.isPassenger, !!account.isDriver, account.password],
+            values: [account.getAccountId(), account.getName(), account.getEmail(), account.getCpf(), account.getCarPlate(), !!account.isPassenger, !!account.isDriver, account.getPassword()],
         });
     }
 }
@@ -45,11 +45,11 @@ export class AccountRepositoryMemory implements AccountRepository {
     accounts: any[] = []
 
     async getAccountByEmail(email: string): Promise<any> {
-        return this.accounts.find((account: any) => account.email === email);
+        return this.accounts.find((account: any) => account.email.getValue() === email);
     }
 
     async getAccountById(accountId: string): Promise<any> {
-        return this.accounts.find((account: any) => account.accountId === accountId);
+        return this.accounts.find((account: any) => account.accountId.getValue() === accountId);
     }
 
     async saveAccount(account: Account): Promise<void> {

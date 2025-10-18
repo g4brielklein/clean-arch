@@ -14,6 +14,6 @@ export default class Signup {
         if (userAlreadyExists) throw new ResourceAlreadyExistsError(`Email ${account.getEmail()} already exists`, { errorCode: -4 });
 
         await this.accountRepository.saveAccount(account);
-        return { accountId: account.accountId };
+        return { accountId: account.getAccountId() };
     }
 }

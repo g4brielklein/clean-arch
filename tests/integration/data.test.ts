@@ -32,7 +32,7 @@ test("Should save an account", async () => {
     expect(outputGetByEmail?.getEmail()).toBe(account.getEmail());
     expect(outputGetByEmail?.getCpf()).toBe(account.getCpf());
     expect(outputGetByEmail?.isPassenger).toBe(account.isPassenger);
-    const outputGetById = await accountRepository.getAccountById(account.accountId);
+    const outputGetById = await accountRepository.getAccountById(account.getAccountId());
     expect(outputGetById?.getName()).toBe(account.getName());
     expect(outputGetById?.getEmail()).toBe(account.getEmail());
     expect(outputGetById?.getCpf()).toBe(account.getCpf());
