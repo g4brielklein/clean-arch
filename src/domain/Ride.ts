@@ -1,18 +1,21 @@
+import Coord from './vo/Coord';
 import UUID from './vo/UUID';
 
 export default class Ride {
     private rideId: UUID;
     private passengerId: UUID;
     private driverId?: UUID;
+    private from: Coord;
+    private to: Coord;
 
     constructor (
         rideId: string,
         passengerId: string,
         driverId: string | null,
-        readonly fromLat: number,
-        readonly fromLong: number,
-        readonly toLat: number,
-        readonly toLong: number,
+        fromLat: number,
+        fromLong: number,
+        toLat: number,
+        toLong: number,
         private fare: number,
         private distance: number,
         private status: string,
@@ -21,8 +24,8 @@ export default class Ride {
         this.rideId = new UUID(rideId);
         this.passengerId = new UUID(passengerId);
         if (driverId) this.driverId = new UUID(driverId);
-        if (fromLat < -90 || fromLat > 90 || toLat < -90 || toLat > 90) throw new Error("Invalid latitude");
-        if (fromLong < -180 || fromLong > 180 || toLong < -180 || toLong > 180) throw new Error("Invalid latitude");
+        this.from = new Coord(fromLat, fromLong);
+        this.to = new Coord(toLat, toLong);
     }
 
     static create (
@@ -43,12 +46,12 @@ export default class Ride {
     calculateDistance () {
         const earthRadius = 6371;
         const degreesToRadians = Math.PI / 180;
-        const deltaLat = (this.toLat - this.fromLat) * degreesToRadians;
-        const deltaLong = (this.toLong - this.fromLong) * degreesToRadians;
+        const deltaLat = (this.getTo().getLat() - this.getFrom().getLat()) * degreesToRadians;
+        const deltaLong = (this.getTo().getLong() - this.getFrom().getLong()) * degreesToRadians;
         const a = 
             Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) + 
-            Math.cos(this.fromLat * degreesToRadians) * 
-            Math.cos(this.toLat * degreesToRadians) * 
+            Math.cos(this.getFrom().getLat() * degreesToRadians) * 
+            Math.cos(this.getTo().getLat() * degreesToRadians) * 
             Math.sin(deltaLong / 2) * 
             Math.sin(deltaLong / 2);
         const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
@@ -70,6 +73,14 @@ export default class Ride {
 
     getDriverId () {
         return this.driverId?.getValue();
+    }
+
+    getFrom () {
+        return this.from;
+    }
+
+    getTo() {
+        return this.to;
     }
 
     setFare (fare: number) {
