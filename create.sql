@@ -26,3 +26,10 @@ CREATE TABLE ccca.rides (
 	to_long numeric,
 	date timestamp
 );
+
+CREATE TABLE ccca.positions (
+	position_id uuid PRIMARY KEY NOT NULL,
+	ride_id uuid NOT NULL,
+	lat numeric NOT NULL,
+	long numeric NOT NULL
+);
