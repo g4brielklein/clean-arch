@@ -2,6 +2,7 @@ import Position from "../../domain/Position";
 import { inject } from "../../infra/di/Registry";
 import PositionRepository from "../../infra/repository/PositionRepository";
 import RideRepository from "../../infra/repository/RideRepository"
+import DistanceCalculator from "../../domain/service/DistanceCalculator";
 
 export default class UpdatePosition {
     @inject("rideRepository")
@@ -12,6 +13,7 @@ export default class UpdatePosition {
         const position = Position.create(input.rideId, input.lat, input.long);
         await this.positionRepository.savePosition(position);
         const positions = await this.positionRepository.getPositionsByRideId(input.rideId);
+        const distance = DistanceCalculator.calculate(positions);
     }
 }
 
