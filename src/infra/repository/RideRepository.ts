@@ -42,7 +42,7 @@ export class RideRepositoryDatabase implements RideRepository {
 
     async updateRide(ride: Ride): Promise<void> {
         await this.connection.query({
-            query: "UPDATE ccca.rides SET status = $1, driver_id = $2, distance = $4, fare = $4 WHERE ride_id = $5;",
+            query: "UPDATE ccca.rides SET status = $1, driver_id = $2, distance = $3, fare = $4 WHERE ride_id = $5;",
             values: [ride.getStatus(), ride.getDriverId(), ride.getDistance(), ride.getFare(), ride.getRideId()],
         });
     }

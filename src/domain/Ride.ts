@@ -43,22 +43,6 @@ export default class Ride {
         return new Ride(rideId, passengerId, null, fromLat, fromLong, toLat, toLong, fare, distance, status, date);
     }
 
-    calculateDistance () {
-        const earthRadius = 6371;
-        const degreesToRadians = Math.PI / 180;
-        const deltaLat = (this.getTo().getLat() - this.getFrom().getLat()) * degreesToRadians;
-        const deltaLong = (this.getTo().getLong() - this.getFrom().getLong()) * degreesToRadians;
-        const a = 
-            Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) + 
-            Math.cos(this.getFrom().getLat() * degreesToRadians) * 
-            Math.cos(this.getTo().getLat() * degreesToRadians) * 
-            Math.sin(deltaLong / 2) * 
-            Math.sin(deltaLong / 2);
-        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-        const distance = earthRadius * c;
-        return Math.round(distance);
-    }
-
     getRideId () {
         return this.rideId.getValue();
     }
@@ -107,10 +91,10 @@ export default class Ride {
         return this.status;
     }
 
-    calculateFare () {
-        const distance = this.calculateDistance();
-        return distance * 2.1;
-    }
+    // calculateFare () {
+    //     const distance = this.calculateDistance();
+    //     return distance * 2.1;
+    // }
 
     accept (driverId: string) {
         if (this.getStatus() !== 'requested') throw new Error(`Ride with id ${this.rideId} has invalid status to be accepted`);
