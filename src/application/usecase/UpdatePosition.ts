@@ -13,7 +13,10 @@ export default class UpdatePosition {
         const position = Position.create(input.rideId, input.lat, input.long);
         await this.positionRepository.savePosition(position);
         const positions = await this.positionRepository.getPositionsByRideId(input.rideId);
-        const distance = DistanceCalculator.calculate(positions);
+        const distance = DistanceCalculator.calculateFromPositions(positions);
+        const ride = await this.rideRepository.getRideById(input.rideId);
+        ride.setDistance(distance);
+        await this.rideRepository.updateRide(ride);
     }
 }
 

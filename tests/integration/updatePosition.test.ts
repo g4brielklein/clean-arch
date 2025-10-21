@@ -88,9 +88,25 @@ test("Should update the position of a ride", async () => {
 
     await updatePosition.execute(inputUpdatePosition);
 
+    const inputUpdatePosition2 = {
+        rideId: outputRequestRide.rideId,
+        lat: -27.496887588317275,
+        long: -48.522234807851476,
+    }
+
+    await updatePosition.execute(inputUpdatePosition2);
+
+    const inputUpdatePosition3 = {
+        rideId: outputRequestRide.rideId,
+        lat: inputUpdatePosition.lat,
+        long: inputUpdatePosition.long,
+    }
+
+    await updatePosition.execute(inputUpdatePosition3);
+
     const outputGetRide = await getRide.execute(outputRequestRide.rideId);
     expect(outputGetRide.status).toBe("in_progress");
-    // expect(outputGetRide.distance).toBe(20);
+    expect(outputGetRide.distance).toBe(20);
 })
 
 afterEach(async () => {

@@ -56,7 +56,3 @@ export class AccountRepositoryMemory implements AccountRepository {
         this.accounts.push(account);
     }
 }
-
-// current 3661
-// week_eliminated 105
-// new_current 3556

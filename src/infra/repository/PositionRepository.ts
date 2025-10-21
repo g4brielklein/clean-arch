@@ -27,7 +27,7 @@ export class PositionRepositoryDatabase implements PositionRepository {
         
         const positions: any = [];
         for (const positionData of positionsData) {
-            positions.push(new Position(positionData.position_id, positionData.ride_id, positionData.lat, positionData.long))
+            positions.push(new Position(positionData.position_id, positionData.ride_id, positionData.lat, positionData.long));
         }
         return positions;
     }
