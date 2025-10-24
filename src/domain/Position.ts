@@ -26,14 +26,14 @@ export default class Position {
         return new Position(positionId, rideId, lat, long);
     }
 
-    getRideId () {
-        return this.rideId.getValue();
-    }
-
     getPositionId () {
         return this.positionId.getValue();
     }
 
+    getRideId () {
+        return this.rideId.getValue();
+    }
+    
     getCoord () {
         return this.coord;
     }

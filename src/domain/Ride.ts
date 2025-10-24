@@ -28,6 +28,7 @@ export default class Ride {
         this.to = new Coord(toLat, toLong);
     }
 
+    // Static factory method
     static create (
         passengerId: string,
         fromLat: number,
@@ -90,11 +91,6 @@ export default class Ride {
     getStatus () {
         return this.status;
     }
-
-    // calculateFare () {
-    //     const distance = this.calculateDistance();
-    //     return distance * 2.1;
-    // }
 
     accept (driverId: string) {
         if (this.getStatus() !== 'requested') throw new Error(`Ride with id ${this.rideId} has invalid status to be accepted`);

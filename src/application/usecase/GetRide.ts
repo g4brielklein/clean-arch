@@ -1,12 +1,23 @@
+import { validate } from "uuid";
+import Position from "../../domain/Position";
 import { inject } from "../../infra/di/Registry";
+import { ResourceNotFoundError } from "../../infra/errors";
+import PositionRepository from "../../infra/repository/PositionRepository";
 import RideRepository from "../../infra/repository/RideRepository";
 
 export default class GetRide {
     @inject("rideRepository")
     rideRepository!: RideRepository;
+    @inject("positionRepository")
+    positionRepository!: PositionRepository;
 
     execute = async (rideId: string): Promise<Output> => {
+        if (!validate(rideId)) throw new ResourceNotFoundError(`Ride with id ${rideId} not found`, { errorCode: -8 });
+        
         const ride = await this.rideRepository.getRideById(rideId);
+        if (!ride) throw new ResourceNotFoundError(`Ride with id ${rideId} not found`, { errorCode: -8 });
+        const positions = await this.positionRepository.getPositionsByRideId(rideId);
+
         return {
             rideId: ride.getRideId(),
             passengerId: ride.getPassengerId(),
@@ -19,6 +30,7 @@ export default class GetRide {
             distance: ride.getDistance(),
             status: ride.getStatus(),
             date: ride.date,
+            positions: positions.map((position: Position) => ({ lat: position.getCoord().getLat(), long: position.getCoord().getLong() })),
         };
     }
 }
@@ -35,4 +47,5 @@ type Output = {
     distance: number,
     status: string,
     date: Date,
+    positions: { lat: number, long: number }[]
 };

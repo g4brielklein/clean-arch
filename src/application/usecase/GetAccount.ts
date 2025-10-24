@@ -9,10 +9,10 @@ export default class GetAccount {
 
     execute = async (accountId: string): Promise<Output> => {
         if (!validate(accountId)) throw new ResourceNotFoundError(`AccountId ${accountId} not found`, { errorCode: -7 });
-
+        
         const account = await this.accountRepository.getAccountById(accountId);
-
         if (!account) throw new ResourceNotFoundError(`AccountId ${accountId} not found`, { errorCode: -7 });
+
         return {
             accountId: account.getAccountId(),
             name: account.getName(),

@@ -107,6 +107,7 @@ test("Should update the position of a ride", async () => {
     const outputGetRide = await getRide.execute(outputRequestRide.rideId);
     expect(outputGetRide.status).toBe("in_progress");
     expect(outputGetRide.distance).toBe(20);
+    expect(outputGetRide.fare).toBe(42);
 })
 
 afterEach(async () => {

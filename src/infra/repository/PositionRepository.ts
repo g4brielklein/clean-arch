@@ -2,9 +2,9 @@ import Position from "../../domain/Position";
 import DatabaseConnection from "../database/DatabaseConnection";
 import { inject } from "../di/Registry";
 
+// Interface Adapter
 export default interface PositionRepository {
     savePosition (position: Position): Promise<void>;
-    // getPositionById (positionId: UUID): Promise<Position>;
     getPositionsByRideId (rideId: string): Promise<Position[]>; 
 }
 
@@ -27,7 +27,7 @@ export class PositionRepositoryDatabase implements PositionRepository {
         
         const positions: any = [];
         for (const positionData of positionsData) {
-            positions.push(new Position(positionData.position_id, positionData.ride_id, positionData.lat, positionData.long));
+            positions.push(new Position(positionData.position_id, positionData.ride_id, parseFloat(positionData.lat), parseFloat(positionData.long)));
         }
         return positions;
     }

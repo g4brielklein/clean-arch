@@ -9,10 +9,6 @@ export default class Cpf {
         this.value = cpf.replace(/\D/g,'');
     }
 
-    getValue () {
-        return this.value;
-    }
-
     validateCpf = (cpf: string) => {
         if (!cpf) return false
         cpf = this.clearCpf(cpf)
@@ -45,5 +41,9 @@ export default class Cpf {
 
     extractDigit = (cpf: string) => {
 	    return cpf.substring(cpf.length - 2, cpf.length);
+    }
+
+    getValue () {
+        return this.value;
     }
 }
