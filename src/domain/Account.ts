@@ -35,6 +35,20 @@ export default class Account {
         if (isDriver) this.carPlate = new CarPlate(carPlate);
     }
 
+    // Static factory method
+    static create (
+        name: string,
+        email: string,
+        cpf: string,
+        password: string,
+        carPlate: string,
+        isPassenger: boolean,
+        isDriver: boolean,
+    ) {
+        const accountId = UUID.create().getValue();
+        return new Account(accountId, name, email, cpf, password, carPlate, isPassenger, isDriver);
+    }
+
     getAccountId () {
         return this.accountId.getValue();
     }
@@ -77,19 +91,5 @@ export default class Account {
 
     getCarPlate () {
         return this.carPlate?.getValue();
-    }
-
-    // Static factory method
-    static create (
-        name: string,
-        email: string,
-        cpf: string,
-        password: string,
-        carPlate: string,
-        isPassenger: boolean,
-        isDriver: boolean,
-    ) {
-        const accountId = UUID.create().getValue();
-        return new Account(accountId, name, email, cpf, password, carPlate, isPassenger, isDriver);
     }
 }

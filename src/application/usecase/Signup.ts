@@ -11,7 +11,7 @@ export default class Signup {
         const account = Account.create(fields.name, fields.email, fields.cpf, fields.password, fields.carPlate, fields.isPassenger, fields.isDriver);
 
         const userAlreadyExists = await this.accountRepository.getAccountByEmail(account.getEmail());
-        if (userAlreadyExists) throw new ResourceAlreadyExistsError(`Email ${account.getEmail()} already exists`, { errorCode: -4 });
+        if (userAlreadyExists) throw new ResourceAlreadyExistsError(`Account ${account.getEmail()} already exists`, { errorCode: -4 });
 
         await this.accountRepository.saveAccount(account);
         return { accountId: account.getAccountId() };

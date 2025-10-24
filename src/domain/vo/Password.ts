@@ -8,11 +8,11 @@ export default class Password {
         this.value = password;
     }
 
-    getValue () {
-        return this.value;
-    }
-
     validatePassword(password: string) {
         return password?.match(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/);
+    }
+
+    getValue () {
+        return this.value;
     }
 }

@@ -5,7 +5,7 @@ import DatabaseConnection from "../database/DatabaseConnection";
 // Interface Adapter
 export default interface RideRepository {
     saveRide (ride: Ride): Promise<void>;
-    getRideById (rideId: string): Promise<Ride>;
+    getRideById (rideId: string): Promise<Ride | undefined>;
     hasActiveRideByPassengerId (passengerId: string): Promise<boolean>;
     updateRide(ride: Ride): Promise<void>;
     updateRideStatus(ride: Ride): Promise<void>;
@@ -22,11 +22,12 @@ export class RideRepositoryDatabase implements RideRepository {
         });
     };
 
-    async getRideById(rideId: string): Promise<Ride> {
+    async getRideById(rideId: string): Promise<Ride | undefined> {
         const [rideData] = await this.connection.query({
             query: 'SELECT * FROM ccca.rides WHERE ride_id = $1;',
             values: [rideId],
         });
+        if (!rideData) return;
 
         return new Ride(rideData.ride_id, rideData.passenger_id, rideData.driver_id, parseFloat(rideData.from_lat), parseFloat(rideData.from_long), parseFloat(rideData.to_lat), parseFloat(rideData.to_long), parseFloat(rideData.fare), parseFloat(rideData.distance), rideData.status, rideData.date);
     };

@@ -62,10 +62,10 @@ export class ResourceAlreadyExistsError extends Error {
 }
 
 export class ResourceNotFoundError extends Error {
-    errorCode: number;
+    errorCode?: number;
     statusCode: number;
 
-    constructor(message: string, { errorCode }) {
+    constructor(message: string, { errorCode }: { errorCode?: number } = {}) {
         super(message);
 
         this.name = "ResourceNotFoundError";

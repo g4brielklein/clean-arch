@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:14.3
+    container_name: ride-database
     environment:
       POSTGRES_PASSWORD: 123456
       POSTGRES_DB: app
