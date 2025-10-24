@@ -9,27 +9,27 @@ CREATE TABLE ccca.accounts (
 	cpf TEXT NOT NULL,
 	car_plate TEXT NULL,
 	is_passenger BOOLEAN NOT NULL DEFAULT false,
-	is_driver boolean NOT NULL DEFAULT false,
+	is_driver BOOLEAN NOT NULL DEFAULT false,
 	password TEXT NOT NULL
 );
 
 CREATE TABLE ccca.rides (
-	ride_id uuid,
-	passenger_id uuid,
-	driver_id uuid,
-	status text,
-	fare numeric,
-	distance numeric,
-	from_lat numeric,
-	from_long numeric,
-	to_lat numeric,
-	to_long numeric,
-	date timestamp
+	ride_id UUID PRIMARY KEY NOT NULL,
+	passenger_id UUID NOT NULL,
+	driver_id UUID,
+	status TEXT NOT NULL,
+	fare NUMERIC,
+	distance NUMERIC,
+	from_lat NUMERIC,
+	from_long NUMERIC,
+	to_lat NUMERIC,
+	to_long NUMERIC,
+	date TIMESTAMP WITH TIME ZONE NOT NULL
 );
 
 CREATE TABLE ccca.positions (
-	position_id uuid PRIMARY KEY NOT NULL,
-	ride_id uuid NOT NULL,
-	lat numeric NOT NULL,
-	long numeric NOT NULL
+	position_id UUID PRIMARY KEY NOT NULL,
+	ride_id UUID NOT NULL,
+	lat NUMERIC NOT NULL,
+	long NUMERIC NOT NULL
 );
