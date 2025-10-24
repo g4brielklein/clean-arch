@@ -1,6 +1,7 @@
 import { inject } from '../di/Registry';
 import DatabaseConnection from '../database/DatabaseConnection';
 import Account from '../../domain/Account'
+import ORM, { AccountModel } from '../orm/ORM';
 
 export default interface AccountRepository {
     getAccountByEmail (email: string): Promise<Account | undefined>,
@@ -54,5 +55,26 @@ export class AccountRepositoryMemory implements AccountRepository {
 
     async saveAccount(account: Account): Promise<void> {
         this.accounts.push(account);
+    }
+}
+
+export class AccountRepositoryORM implements AccountRepository {
+    @inject("orm")
+    orm!: ORM;
+
+    async getAccountById(id: string): Promise<Account | undefined> {
+        const accountData = await this.orm.get(AccountModel, 'account_id', id) as AccountModel;
+        return new Account(accountData.accountId, accountData.name, accountData.email, accountData.cpf, accountData.password, accountData.carPlate, accountData.isPassenger, accountData.isDriver);
+    }
+
+    async getAccountByEmail(email: string): Promise<Account | undefined> {
+        const accountData = await this.orm.get(AccountModel, 'email', email) as AccountModel;
+        if (!accountData) return
+        return new Account(accountData.accountId, accountData.name, accountData.email, accountData.cpf, accountData.password, accountData.carPlate, accountData.isPassenger, accountData.isDriver);
+    }
+
+    async saveAccount(account: Account): Promise<void> {
+        const accountModel = new AccountModel(account.getAccountId(), account.getName(), account.getEmail(), account.getCpf(), account.getPassword(), account.getCarPlate() || '', !!account.isPassenger, !!account.isDriver);
+        await this.orm.save(accountModel);
     }
 }
