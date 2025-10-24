@@ -1,5 +1,5 @@
 import sinon from 'sinon';
-import { AccountRepositoryMemory, AccountRepositoryDatabase } from '../../src/infra/repository/AccountRepository';
+import { AccountRepositoryMemory, AccountRepositoryDatabase, AccountRepositoryORM } from '../../src/infra/repository/AccountRepository';
 import AccountRepository from '../../src/infra/repository/AccountRepository';
 import Registry from '../../src/infra/di/Registry';
 import Signup from '../../src/application/usecase/Signup';
@@ -7,16 +7,21 @@ import GetAccount from '../../src/application/usecase/GetAccount';
 import DatabaseConnection, { PgPromiseAdapter } from '../../src/infra/database/DatabaseConnection';
 import { randomUUID } from 'node:crypto';
 import Account from '../../src/domain/Account';
+// import ORM from '../../src/infra/orm/ORM';
 
 let databaseConnection: DatabaseConnection
+// let orm: ORM;
 let accountRepository: AccountRepository;
 let signup: Signup;
 let getAccount: GetAccount;
 
 beforeEach(() => {
     databaseConnection = new PgPromiseAdapter();
+    // orm = new ORM()
     Registry.getInstance().provide("databaseConnection", databaseConnection);
+    // Registry.getInstance().provide("orm", orm);
     accountRepository = new AccountRepositoryDatabase();
+    // accountRepository = new AccountRepositoryORM()
     Registry.getInstance().provide("accountRepository", accountRepository);
     signup = new Signup();
     getAccount = new GetAccount();
