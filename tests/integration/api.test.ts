@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-axios.defaults.validateStatus = () => true;
+axios.defaults.validateStatus = () => {
+    return true
+};
 
 test("Should create an user type passenger", async () => {
     const input = {

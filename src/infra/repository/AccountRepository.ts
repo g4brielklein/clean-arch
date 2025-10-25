@@ -64,6 +64,7 @@ export class AccountRepositoryORM implements AccountRepository {
 
     async getAccountById(id: string): Promise<Account | undefined> {
         const accountData = await this.orm.get(AccountModel, 'account_id', id) as AccountModel;
+        if (!accountData) return
         return new Account(accountData.accountId, accountData.name, accountData.email, accountData.cpf, accountData.password, accountData.carPlate, accountData.isPassenger, accountData.isDriver);
     }
 

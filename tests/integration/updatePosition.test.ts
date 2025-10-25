@@ -85,7 +85,6 @@ test("Should update the position of a ride", async () => {
         lat: -27.584905257808835,
         long: -48.545022195325124,
     }
-
     await updatePosition.execute(inputUpdatePosition);
 
     const inputUpdatePosition2 = {
@@ -93,7 +92,6 @@ test("Should update the position of a ride", async () => {
         lat: -27.496887588317275,
         long: -48.522234807851476,
     }
-
     await updatePosition.execute(inputUpdatePosition2);
 
     const inputUpdatePosition3 = {
@@ -101,7 +99,6 @@ test("Should update the position of a ride", async () => {
         lat: inputUpdatePosition.lat,
         long: inputUpdatePosition.long,
     }
-
     await updatePosition.execute(inputUpdatePosition3);
 
     const outputGetRide = await getRide.execute(outputRequestRide.rideId);
