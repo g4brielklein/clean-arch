@@ -93,13 +93,13 @@ export default class Ride {
     }
 
     accept (driverId: string) {
-        if (this.getStatus() !== 'requested') throw new Error(`Ride with id ${this.rideId} has invalid status to be accepted`);
+        if (this.getStatus() !== 'requested') throw new Error(`Ride with id ${this.getRideId()} has invalid status to be accepted`);
         this.setStatus('accepted');
         this.setDriverId(driverId);
     }
 
     start () {
-        if (this.getStatus() !== 'accepted') throw new Error(`Ride with id ${this.rideId} has invalid status to be started`);
+        if (this.getStatus() !== 'accepted') throw new Error(`Ride with id ${this.getRideId()} has invalid status to be started`);
         this.setStatus('in_progress');
     }
 }
