@@ -11,6 +11,8 @@ import { RideRepositoryDatabase } from "./infra/repository/RideRepository";
 import { PositionRepositoryDatabase } from "./infra/repository/PositionRepository";
 import ORM from "./infra/orm/ORM";
 import RequestRide from "./application/usecase/RequestRide";
+import AcceptRide from "./application/usecase/AcceptRide";
+import StartRide from "./application/usecase/StartRide";
 const PORT = 3000;
 
 // Main - Composition Root
@@ -24,6 +26,8 @@ const positionRepository = new PositionRepositoryDatabase();
 const signup = new Signup();
 const getAccount = new GetAccount();
 const requestRide = new RequestRide();
+const acceptRide = new AcceptRide();
+const startRide = new StartRide();
 const getRide = new GetRide();
 const httpServer = new ExpressAdapter();
 // const httpServer = new HapiAdapter();
@@ -36,6 +40,8 @@ Registry.getInstance().provide("positionRepository", positionRepository);
 Registry.getInstance().provide("signup", signup);
 Registry.getInstance().provide("getAccount", getAccount);
 Registry.getInstance().provide("requestRide", requestRide);
+Registry.getInstance().provide("acceptRide", acceptRide);
+Registry.getInstance().provide("startRide", startRide);
 Registry.getInstance().provide("getRide", getRide);
 
 new AccountController;
