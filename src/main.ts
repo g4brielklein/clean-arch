@@ -9,12 +9,13 @@ import RideController from "./infra/controller/RideController";
 import GetRide from "./application/usecase/GetRide";
 import { RideRepositoryDatabase } from "./infra/repository/RideRepository";
 import { PositionRepositoryDatabase } from "./infra/repository/PositionRepository";
-// import ORM from "./infra/orm/ORM";
+import ORM from "./infra/orm/ORM";
+import RequestRide from "./application/usecase/RequestRide";
 const PORT = 3000;
 
 // Main - Composition Root
 const databaseConnection = new PgPromiseAdapter();
-// const orm = new ORM();
+const orm = new ORM();
 // const accountRepository = new AccountRepositoryMemory();
 // const accountRepository = new AccountRepositoryORM();
 const accountRepository = new AccountRepositoryDatabase();
@@ -22,17 +23,19 @@ const rideRepository = new RideRepositoryDatabase();
 const positionRepository = new PositionRepositoryDatabase();
 const signup = new Signup();
 const getAccount = new GetAccount();
+const requestRide = new RequestRide();
 const getRide = new GetRide();
 const httpServer = new ExpressAdapter();
 // const httpServer = new HapiAdapter();
 Registry.getInstance().provide("databaseConnection", databaseConnection);
-// Registry.getInstance().provide("orm", orm);
+Registry.getInstance().provide("orm", orm);
 Registry.getInstance().provide("httpServer", httpServer);
 Registry.getInstance().provide("accountRepository", accountRepository);
 Registry.getInstance().provide("rideRepository", rideRepository);
 Registry.getInstance().provide("positionRepository", positionRepository);
 Registry.getInstance().provide("signup", signup);
 Registry.getInstance().provide("getAccount", getAccount);
+Registry.getInstance().provide("requestRide", requestRide);
 Registry.getInstance().provide("getRide", getRide);
 
 new AccountController;

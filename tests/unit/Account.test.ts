@@ -11,11 +11,10 @@ test("Should create a passenger account", () => {
         true,
         false,
     );
-
     expect(account).toBeDefined();
 })
 
-test("Should not create a passenger account", () => {
+test("Should not create an account with invalid UUID", () => {
     expect(() => new Account(
         "1",
         "Michael Scott",

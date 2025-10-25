@@ -4,17 +4,14 @@ import Account from '../../src/domain/Account'
 import DatabaseConnection, { PgPromiseAdapter } from '../../src/infra/database/DatabaseConnection';
 import Registry from '../../src/infra/di/Registry';
 
-let databaseConnection: DatabaseConnection;
-let accountRepository: AccountRepository;
-
-beforeEach(() => {
+test("Should save an account", async () => {
+    let databaseConnection: DatabaseConnection;
+    let accountRepository: AccountRepository;
     databaseConnection = new PgPromiseAdapter();
-    Registry.getInstance().provide("databaseConnection", databaseConnection);
     accountRepository = new AccountRepositoryDatabase();
     Registry.getInstance().provide("accountRepository", accountRepository);
-})
+    Registry.getInstance().provide("databaseConnection", databaseConnection);
 
-test("Should save an account", async () => {
     const account = Account.create(
         'John Doe',
         `johndoe${Math.random()}@gmail.com`,
@@ -37,8 +34,6 @@ test("Should save an account", async () => {
     expect(outputGetById?.getEmail()).toBe(account.getEmail());
     expect(outputGetById?.getCpf()).toBe(account.getCpf());
     expect(outputGetById?.isPassenger).toBe(account.isPassenger);
-});
-
-afterEach(async () => {
+    
     await databaseConnection.close();
-})
+});

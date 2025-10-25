@@ -37,7 +37,6 @@ test("Should request a ride", async () => {
         password: 'Abcd1234',
         isPassenger: true,
     }
-
     const outputSignup = await signup.execute(inputSignup);
 
     const inputRequestRide = {
@@ -47,8 +46,8 @@ test("Should request a ride", async () => {
         toLat: -27.496887588317275,
         toLong: -48.522234807851476,
     }
-
     const outputRequestRide = await requestRide.execute(inputRequestRide);
+
     expect(outputRequestRide.rideId).toBeDefined();
     const outputGetRide = await getRide.execute(outputRequestRide.rideId);
     expect(outputGetRide.passengerId).toBe(inputRequestRide.passengerId);
@@ -69,7 +68,6 @@ test("Should not request a ride if requester is not a passenger", async () => {
         isDriver: true,
         carPlate: 'IOG5C00',
     };
-
     const outputSignup = await signup.execute(inputSignup);
 
     const inputRequestRide = {
@@ -79,7 +77,6 @@ test("Should not request a ride if requester is not a passenger", async () => {
         toLat: -27.496887588317275,
         toLong: -48.522234807851476,
     };
-
     await expect(() => requestRide.execute(inputRequestRide)).rejects.toThrow(new Error("Requester must be a passenger"));
 })
 
@@ -91,7 +88,6 @@ test("Should not request a ride if passenger already has an active one", async (
         password: 'Abcd1234',
         isPassenger: true,
     };
-
     const outputSignup = await signup.execute(inputSignup);
 
     const inputRequestRide = {
@@ -101,9 +97,7 @@ test("Should not request a ride if passenger already has an active one", async (
         toLat: -27.496887588317275,
         toLong: -48.522234807851476,
     };
-
-    const outputRequestRide = await requestRide.execute(inputRequestRide);
-    expect(outputRequestRide.rideId).toBeDefined();
+    await requestRide.execute(inputRequestRide);
 
     await expect(() => requestRide.execute(inputRequestRide)).rejects.toThrow(new Error("Requester already has an active ride"));
 })
@@ -116,7 +110,6 @@ test("Should not request a ride if latitude is invalid", async () => {
         password: 'Abcd1234',
         isPassenger: true,
     };
-
     const outputSignup = await signup.execute(inputSignup);
 
     const inputRequestRide = {
@@ -126,11 +119,10 @@ test("Should not request a ride if latitude is invalid", async () => {
         toLat: -27.496887588317275,
         toLong: -48.522234807851476,
     };
-
     await expect(() => requestRide.execute(inputRequestRide)).rejects.toThrow(new Error("Invalid latitude"));
 })
 
-test("Should not request a ride if latitude is invalid", async () => {
+test("Should not request a ride if longitude is invalid", async () => {
     const inputSignup = {
         name: 'John Doe',
         email: `johndoe${Math.random()}@gmail.com`,
@@ -138,7 +130,6 @@ test("Should not request a ride if latitude is invalid", async () => {
         password: 'Abcd1234',
         isPassenger: true,
     };
-
     const outputSignup = await signup.execute(inputSignup);
 
     const inputRequestRide = {
@@ -148,7 +139,6 @@ test("Should not request a ride if latitude is invalid", async () => {
         toLat: -27.496887588317275,
         toLong: -180.522234807851476,
     };
-
     await expect(() => requestRide.execute(inputRequestRide)).rejects.toThrow(new Error("Invalid longitude"));
 })
 

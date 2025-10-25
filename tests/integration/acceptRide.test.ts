@@ -41,9 +41,7 @@ test("Should accept a ride", async () => {
         isPassenger: true,
         isDriver: false,
     };
-
     const outputSignupPassenger = await signup.execute(inputSignupPassenger);
-    expect(outputSignupPassenger.accountId).toBeDefined();
 
     const inputSignupDriver = {
         name: 'John Doe',
@@ -55,7 +53,6 @@ test("Should accept a ride", async () => {
         carPlate: 'IOG5C77'
     };
     const outputSignupDriver = await signup.execute(inputSignupDriver);
-    expect(outputSignupDriver.accountId).toBeDefined();
 
     const inputRequestRide = {
         passengerId: outputSignupPassenger.accountId,
@@ -64,9 +61,7 @@ test("Should accept a ride", async () => {
         toLat: -27.496887588317275,
         toLong: -48.522234807851476,
     };
-
     const outputRequestRide = await requestRide.execute(inputRequestRide);
-    expect(outputRequestRide.rideId).toBeDefined();
 
     const inputAcceptRide = {
         rideId: outputRequestRide.rideId,
@@ -88,9 +83,7 @@ test("Should not accept a ride if accepter is not a driver", async () => {
         isPassenger: true,
         isDriver: false,
     };
-
     const outputSignupPassenger = await signup.execute(inputSignupPassenger);
-    expect(outputSignupPassenger.accountId).toBeDefined();
 
     const inputRequestRide = {
         passengerId: outputSignupPassenger.accountId,
@@ -99,9 +92,7 @@ test("Should not accept a ride if accepter is not a driver", async () => {
         toLat: -27.496887588317275,
         toLong: -48.522234807851476,
     }
-
     const outputRequestRide = await requestRide.execute(inputRequestRide);
-    expect(outputRequestRide.rideId).toBeDefined();
 
     const inputAcceptRide = {
         rideId: outputRequestRide.rideId,

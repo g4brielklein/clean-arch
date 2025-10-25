@@ -7,21 +7,18 @@ import GetAccount from '../../src/application/usecase/GetAccount';
 import DatabaseConnection, { PgPromiseAdapter } from '../../src/infra/database/DatabaseConnection';
 import { randomUUID } from 'node:crypto';
 import Account from '../../src/domain/Account';
-// import ORM from '../../src/infra/orm/ORM';
+import ORM from '../../src/infra/orm/ORM';
 
 let databaseConnection: DatabaseConnection
-// let orm: ORM;
+let orm: ORM;
 let accountRepository: AccountRepository;
 let signup: Signup;
 let getAccount: GetAccount;
 
 beforeEach(() => {
     databaseConnection = new PgPromiseAdapter();
-    // orm = new ORM()
     Registry.getInstance().provide("databaseConnection", databaseConnection);
-    // Registry.getInstance().provide("orm", orm);
     accountRepository = new AccountRepositoryDatabase();
-    // accountRepository = new AccountRepositoryORM()
     Registry.getInstance().provide("accountRepository", accountRepository);
     signup = new Signup();
     getAccount = new GetAccount();
@@ -238,6 +235,35 @@ test("Should create an account using mock", async () => {
     expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
 
     accountDAOMock.verify();
+});
+
+test("Should create an account using an ORM to persist on DB", async () => {
+    orm = new ORM()
+    Registry.getInstance().provide("orm", orm);
+    accountRepository = new AccountRepositoryORM()
+    Registry.getInstance().provide("accountRepository", accountRepository);
+    signup = new Signup();
+    getAccount = new GetAccount();
+    
+    const input = {
+        id: randomUUID(),
+        name: 'John Doe',
+        email: `johndoe${Math.random()}@gmail.com`,
+        cpf: '97456321558',
+        password: 'Abcd1234',
+        carPlate: "",
+        isPassenger: true,
+        isDriver: false
+    };
+
+    const outputSignup = await signup.execute(input);
+    expect(outputSignup.accountId).toBeDefined();
+
+    const outputGetAccount = await getAccount.execute(outputSignup.accountId);
+    expect(outputGetAccount.name).toBe(input.name);
+    expect(outputGetAccount.email).toBe(input.email);
+    expect(outputGetAccount.cpf).toBe(input.cpf);
+    expect(outputGetAccount.isPassenger).toBe(input.isPassenger);
 });
 
 afterEach(async () => {
