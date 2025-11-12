@@ -1,3 +1,4 @@
+import RideStatus, { RideStatusFactory } from './RideStatus';
 import Coord from './vo/Coord';
 import UUID from './vo/UUID';
 
@@ -7,6 +8,7 @@ export default class Ride {
     private driverId?: UUID;
     private from: Coord;
     private to: Coord;
+    private status: RideStatus;
 
     constructor (
         rideId: string,
@@ -18,7 +20,7 @@ export default class Ride {
         toLong: number,
         private fare: number,
         private distance: number,
-        private status: string,
+        status: string,
         readonly date: Date
     ) {
         this.rideId = new UUID(rideId);
@@ -26,6 +28,7 @@ export default class Ride {
         if (driverId) this.driverId = new UUID(driverId);
         this.from = new Coord(fromLat, fromLong);
         this.to = new Coord(toLat, toLong);
+        this.status = RideStatusFactory.create(status, this);
     }
 
     // Static factory method
@@ -84,22 +87,24 @@ export default class Ride {
         return this.distance;
     }
 
-    setStatus (status: string) {
+    setStatus (status: RideStatus) {
         this.status = status;
     }
 
     getStatus () {
-        return this.status;
+        return this.status.value;
     }
 
     accept (driverId: string) {
-        if (this.getStatus() !== 'requested') throw new Error(`Ride with id ${this.getRideId()} has invalid status to be accepted`);
-        this.setStatus('accepted');
+        this.status.accept();
         this.setDriverId(driverId);
     }
 
     start () {
-        if (this.getStatus() !== 'accepted') throw new Error(`Ride with id ${this.getRideId()} has invalid status to be started`);
-        this.setStatus('in_progress');
+        this.status.start();
+    }
+
+    finish() {
+        this.status.finish();
     }
 }
