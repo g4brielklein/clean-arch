@@ -4,6 +4,7 @@ import GetRide from "../../src/application/usecase/GetRide";
 import RequestRide from "../../src/application/usecase/RequestRide";
 import Signup from "../../src/application/usecase/Signup";
 import StartRide from "../../src/application/usecase/StartRide";
+import UpdatePosition from "../../src/application/usecase/UpdatePosition";
 import DatabaseConnection, { PgPromiseAdapter } from "../../src/infra/database/DatabaseConnection";
 import Registry from "../../src/infra/di/Registry";
 import AccountRepository, { AccountRepositoryDatabase } from "../../src/infra/repository/AccountRepository";
@@ -19,6 +20,7 @@ let requestRide: RequestRide;
 let getRide: GetRide;
 let acceptRide: AcceptRide;
 let startRide: StartRide;
+let updatePosition: UpdatePosition;
 let finishRide: FinishRide;
 
 beforeEach(() => {
@@ -35,6 +37,7 @@ beforeEach(() => {
     getRide = new GetRide();
     acceptRide = new AcceptRide();
     startRide = new StartRide();
+    updatePosition = new UpdatePosition();
     finishRide = new FinishRide();
 })
 
@@ -80,15 +83,36 @@ test("Should finish a ride", async () => {
     }
     await startRide.execute(inputStartRide);
 
-    const outputGetRide = await getRide.execute(outputRequestRide.rideId);
-    expect(outputGetRide.status).toBe("in_progress");
+    const inputUpdatePosition = {
+        rideId: outputRequestRide.rideId,
+        lat: -27.584905257808835,
+        long: -48.545022195325124,
+    }
+    await updatePosition.execute(inputUpdatePosition);
+
+    const inputUpdatePosition2 = {
+        rideId: outputRequestRide.rideId,
+        lat: -27.496887588317275,
+        long: -48.522234807851476,
+    }
+    await updatePosition.execute(inputUpdatePosition2);
+
+    const inputUpdatePosition3 = {
+        rideId: outputRequestRide.rideId,
+        lat: inputUpdatePosition.lat,
+        long: inputUpdatePosition.long,
+    }
+    await updatePosition.execute(inputUpdatePosition3);
 
     const inputFinishRide = {
         rideId: outputRequestRide.rideId,
     }
     await finishRide.execute(inputFinishRide);
+
     const outputGetFinishedRide = await getRide.execute(outputRequestRide.rideId);
     expect(outputGetFinishedRide.status).toBe("finished");
+    expect(outputGetFinishedRide.distance).toBe(20);
+    expect(outputGetFinishedRide.fare).toBe(42);
 });
 
 afterEach(async () => {

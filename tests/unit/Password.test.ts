@@ -1,4 +1,5 @@
-import { validatePassword } from "../../src/domain/validatePassword";
+import Password from "../../src/domain/vo/Password";
+import { InvalidFieldError } from "../../src/infra/errors";
 
 test.each([
     "aBc123az",
@@ -9,8 +10,7 @@ test.each([
     // Should have uppercase characters, lowercase and numbers
     // Sould have at least 8 characters
 
-    const isValid = validatePassword(password);
-    expect(isValid).toBe(true)
+    expect(new Password(password)).toBeDefined;
 })
 
 test.each([
@@ -23,6 +23,11 @@ test.each([
     // Should have uppercase characters, lowercase and numbers
     // Sould have at least 8 characters
 
-    const isValid = validatePassword(password);
-    expect(isValid).toBe(false)
+    try {
+        new Password(password);
+    } catch (err: any) {
+        expect(err).toBeInstanceOf(InvalidFieldError);
+        expect(err.message).toBe("Invalid password");
+        expect(err.errorCode).toBe(-5);
+    }
 })
