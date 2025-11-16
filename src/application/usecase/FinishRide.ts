@@ -1,6 +1,7 @@
 import { inject } from "../../infra/di/Registry";
 import { ResourceNotFoundError } from "../../infra/errors";
 import RideRepository from "../../infra/repository/RideRepository";
+import ProcessPayment from "./ProcessPayment";
 
 export default class FinishRide {
     @inject("rideRepository")
@@ -12,6 +13,8 @@ export default class FinishRide {
         if (!ride) throw new ResourceNotFoundError(`Ride with id ${input.rideId} not found`, { errorCode: -8 });
         ride.finish();
         await this.rideRepository.updateRideStatus(ride);
+        const processPayment = new ProcessPayment();
+        await processPayment.execute(input.rideId);
     }
 }
 
