@@ -15,6 +15,6 @@ export default class ProcessPayment {
             creditCardToken: "",
             amount: ride.getFare(),
         }
-        await gateway.processTransaction(input);
+        const output = await gateway.processTransaction(input);
     }
 }
