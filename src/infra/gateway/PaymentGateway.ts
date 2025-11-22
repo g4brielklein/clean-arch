@@ -17,6 +17,8 @@ type Output = {
 
 export class CieloPaymentGateway implements PaymentGateway {
     async processTransaction(input: Input): Promise<Output> {
+        console.log('processing payment via Cielo...')
+
         let transaction = {
             "MerchantOrderId":"2014111701",
             "Customer": {
@@ -82,22 +84,77 @@ export class CieloPaymentGateway implements PaymentGateway {
         const response: any = await axios(request);
         const outputCielo = response.data;
 
+        // ACL - Anti-corruption layer
         let status = "rejected";
         if (outputCielo.Payment.ReturnCode = "4") {
             status = 'approved';
         }
 
-        // ACL - Anti-corruption layer
-        return {
+        const output = {
             tid: outputCielo.Payment.Tid,
             authorizationCode: outputCielo.Payment.AuthorizationCode,
             status,
         }
+        return output;
     }
 }
 
 export class PJBankPaymentGateway implements PaymentGateway {
     async processTransaction(input: Input): Promise<Output> {
-        throw new Error("Method not implemented.");
+        console.log('processing payment via PJBank...')
+        throw new Error('service offline')
+
+        const [month, year] = "05/2027".split("/");
+        const creditCard = {
+            nome_cartao: "Cliente Exemplo",
+			numero_cartao: "4012001037141112",
+			mes_vencimento: month,
+			ano_vencimento: year,
+			cpf_cartao: "64111456529",
+			codigo_cvv: "123",
+			email_cartao: "api@pjbank.com.br",
+        };
+        const request1 = {
+            url: "https://sandbox.pjbank.com.br/recebimentos/e0727263cc7a983f0aae5411ad86c5a144b8ed28/tokens",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=UTF-8",
+                "X-CHAVE": "e9db986de751de918ca19a1c377f0b7c313915f8",
+            },
+            data: creditCard,
+        }
+        const response1 = await axios(request1);
+        const output1 = response1.data;
+
+        let transaction = {
+            pedido_numero: "1",
+			token_cartao: output1.token_cartao,
+			valor: 100000,
+			parcelas: 1,
+			descricao_pagamento: ""
+        };
+        const request2 = {
+            url: "https://sandbox.pjbank.com.br/recebimentos/e0727263cc7a983f0aae5411ad86c5a144b8ed28/transacoes",
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json;charset=UTF-8",
+                "X-CHAVE": "e9db986de751de918ca19a1c377f0b7c313915f8",
+            },
+            data: transaction,
+        }
+        const response2 = await axios(request2);
+        const output2 = response2.data;
+
+        // ACL - Anti-corruption layer
+        let status = "rejected";
+        if (output2.autorizada === '1') {
+            status = 'approved';
+        }
+        const output = {
+            tid: output2.tid,
+            authorizationCode: output2.autorizacao,
+            status,
+        }
+        return output;
     }
 }
