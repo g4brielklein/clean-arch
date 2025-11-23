@@ -1,6 +1,7 @@
 // Chain of Responsability
 
 import { CieloPaymentGateway, PJBankPaymentGateway } from "../gateway/PaymentGateway";
+import Retry from "../retry/Retry";
 
 export default interface PaymentProcessor {
     next?: PaymentProcessor,
@@ -28,7 +29,11 @@ export class PJBankPaymentProcessor implements PaymentProcessor {
     async processPayment(input: any): Promise<any> {
         try {
             const gateway = new PJBankPaymentGateway();
-            const output = await gateway.processTransaction(input);
+            let output: any;
+            await Retry.execute(async () => {
+                output = await gateway.processTransaction(input);
+            }, 3, 1000);
+            if (!output) throw new Error();
             return output;
         } catch(_: any) {
             if (!this.next) throw new Error('No processors available');
