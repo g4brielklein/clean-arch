@@ -1,5 +1,5 @@
 import { validate } from "uuid";
-import Position from "../../domain/Position";
+import Position from "../../domain/entity/Position";
 import { inject } from "../../infra/di/Registry";
 import { ResourceNotFoundError } from "../../infra/errors";
 import PositionRepository from "../../infra/repository/PositionRepository";

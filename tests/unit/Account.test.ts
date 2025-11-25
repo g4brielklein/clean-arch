@@ -1,4 +1,4 @@
-import Account from "../../src/domain/Account"
+import Account from "../../src/domain/entity/Account"
 import { InvalidFieldError } from "../../src/infra/errors";
 
 test("Should create a passenger account", () => {

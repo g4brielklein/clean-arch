@@ -1,8 +1,23 @@
 // Domain Service
-export default class FareCalculator {
-    private static FARE_RATE = 2.1;
+export default interface FareCalculator {
+    calculate (distance: number): number;
+}
 
-    static calculate = (distance: number) => {
-        return distance * FareCalculator.FARE_RATE;
+export class RegularFareCalculator implements FareCalculator {
+    calculate(distance: number): number {
+        return distance * 2.1;
+    }
+}
+
+export class OvernightFareCalculator implements FareCalculator {
+    calculate(distance: number): number {
+        return distance * 3.9;
+    }
+}
+
+export class FareCalculatorFactory {
+    static create (date: Date) {
+        if (date.getHours() > 22 || date.getHours() < 6) return new OvernightFareCalculator();
+        return new RegularFareCalculator();
     }
 }

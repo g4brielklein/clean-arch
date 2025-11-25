@@ -1,11 +1,12 @@
-import Position from "../../domain/Position";
+import Position from "../../domain/entity/Position";
 import DatabaseConnection from "../database/DatabaseConnection";
 import { inject } from "../di/Registry";
 
 // Interface Adapter
 export default interface PositionRepository {
     savePosition (position: Position): Promise<void>;
-    getPositionsByRideId (rideId: string): Promise<Position[]>; 
+    getPositionsByRideId (rideId: string): Promise<Position[]>;
+    getLastPositionByRideId (rideId: string): Promise<Position | undefined>;
 }
 
 export class PositionRepositoryDatabase implements PositionRepository {
@@ -30,5 +31,15 @@ export class PositionRepositoryDatabase implements PositionRepository {
             positions.push(new Position(positionData.position_id, positionData.ride_id, parseFloat(positionData.lat), parseFloat(positionData.long)));
         }
         return positions;
+    }
+
+    async getLastPositionByRideId(rideId: string): Promise<Position | undefined> {
+        const [lastPositionData] = await this.connection.query({
+            query: "SELECT * FROM ccca.positions WHERE ride_id = $1 ORDER BY date DESC LIMIT 1;",
+            values: [rideId],
+        });
+        if (!lastPositionData) return;
+        const position = new Position(lastPositionData.position_id, lastPositionData.ride_id, lastPositionData.lat, lastPositionData.long);
+        return position;
     }
 }

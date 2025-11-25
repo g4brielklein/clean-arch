@@ -1,6 +1,6 @@
-import RideStatus, { RideStatusFactory } from './RideStatus';
-import Coord from './vo/Coord';
-import UUID from './vo/UUID';
+import RideStatus, { RideStatusFactory } from '../vo/RideStatus';
+import Coord from '../vo/Coord';
+import UUID from '../vo/UUID';
 
 export default class Ride {
     private rideId: UUID;

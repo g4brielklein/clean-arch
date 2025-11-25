@@ -31,5 +31,6 @@ CREATE TABLE ccca.positions (
 	position_id UUID PRIMARY KEY NOT NULL,
 	ride_id UUID NOT NULL,
 	lat NUMERIC NOT NULL,
-	long NUMERIC NOT NULL
+	long NUMERIC NOT NULL,
+	date timestamp WITH TIME ZONE
 );

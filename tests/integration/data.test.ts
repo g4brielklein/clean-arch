@@ -1,6 +1,6 @@
 import { AccountRepositoryDatabase } from '../../src/infra/repository/AccountRepository';
 import AccountRepository from '../../src/infra/repository/AccountRepository';
-import Account from '../../src/domain/Account'
+import Account from '../../src/domain/entity/Account'
 import DatabaseConnection, { PgPromiseAdapter } from '../../src/infra/database/DatabaseConnection';
 import Registry from '../../src/infra/di/Registry';
 
