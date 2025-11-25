@@ -1,4 +1,4 @@
-import Ride from "../../domain/Ride";
+import Ride from "../../domain/entity/Ride";
 import { inject } from "../di/Registry";
 import DatabaseConnection from "../database/DatabaseConnection";
 

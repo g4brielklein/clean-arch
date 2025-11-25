@@ -1,6 +1,6 @@
 import { inject } from '../di/Registry';
 import DatabaseConnection from '../database/DatabaseConnection';
-import Account from '../../domain/Account'
+import Account from '../../domain/entity/Account'
 import ORM, { AccountModel } from '../orm/ORM';
 
 export default interface AccountRepository {

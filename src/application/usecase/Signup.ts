@@ -1,5 +1,5 @@
 import { inject } from '../../infra/di/Registry';
-import Account from '../../domain/Account';
+import Account from '../../domain/entity/Account';
 import AccountRepository from '../../infra/repository/AccountRepository';
 import { ResourceAlreadyExistsError } from '../../infra/errors';
 

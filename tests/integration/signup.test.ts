@@ -6,7 +6,7 @@ import Signup from '../../src/application/usecase/Signup';
 import GetAccount from '../../src/application/usecase/GetAccount';
 import DatabaseConnection, { PgPromiseAdapter } from '../../src/infra/database/DatabaseConnection';
 import { randomUUID } from 'node:crypto';
-import Account from '../../src/domain/Account';
+import Account from '../../src/domain/entity/Account';
 import ORM from '../../src/infra/orm/ORM';
 
 let databaseConnection: DatabaseConnection

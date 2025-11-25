@@ -1,9 +1,9 @@
-import Name from './vo/Name';
-import Email from './vo/Email';
-import Cpf from './vo/Cpf';
-import Password from './vo/Password';
-import CarPlate from './vo/CarPlate';
-import UUID from './vo/UUID';
+import Name from '../vo/Name';
+import Email from '../vo/Email';
+import Cpf from '../vo/Cpf';
+import Password from '../vo/Password';
+import CarPlate from '../vo/CarPlate';
+import UUID from '../vo/UUID';
 
 // Aggregate made from an Entity "Account" and VOs (UUID, Name, Email, Cpf, CarPlate, Password)
 // All Aggregates have an Aggregate Root <AR>, and it is the Entity that "leads" the Aggregate

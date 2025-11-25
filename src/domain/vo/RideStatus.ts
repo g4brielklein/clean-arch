@@ -1,5 +1,5 @@
-import { InvalidFieldError } from "../infra/errors";
-import Ride from "./Ride";
+import { InvalidFieldError } from "../../infra/errors";
+import Ride from "../entity/Ride";
 
 export default interface RideStatus {
     value: string;
