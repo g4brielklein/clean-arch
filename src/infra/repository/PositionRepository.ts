@@ -15,8 +15,8 @@ export class PositionRepositoryDatabase implements PositionRepository {
 
     async savePosition(position: Position): Promise<void> {
         await this.connection.query({
-            query: "INSERT INTO ccca.positions (position_id, ride_id, lat, long) VALUES ($1, $2, $3, $4)",
-            values: [position.getPositionId(), position.getRideId(), position.getCoord().getLat(), position.getCoord().getLong()],
+            query: "INSERT INTO ccca.positions (position_id, ride_id, lat, long, date) VALUES ($1, $2, $3, $4, $5)",
+            values: [position.getPositionId(), position.getRideId(), position.getCoord().getLat(), position.getCoord().getLong(), position.getDate()],
         });
     }
 
@@ -28,7 +28,7 @@ export class PositionRepositoryDatabase implements PositionRepository {
         
         const positions: any = [];
         for (const positionData of positionsData) {
-            positions.push(new Position(positionData.position_id, positionData.ride_id, parseFloat(positionData.lat), parseFloat(positionData.long)));
+            positions.push(new Position(positionData.position_id, positionData.ride_id, parseFloat(positionData.lat), parseFloat(positionData.long), positionData.date));
         }
         return positions;
     }
@@ -39,7 +39,7 @@ export class PositionRepositoryDatabase implements PositionRepository {
             values: [rideId],
         });
         if (!lastPositionData) return;
-        const position = new Position(lastPositionData.position_id, lastPositionData.ride_id, lastPositionData.lat, lastPositionData.long);
+        const position = new Position(lastPositionData.position_id, lastPositionData.ride_id, lastPositionData.lat, lastPositionData.long, lastPositionData.date);
         return position;
     }
 }

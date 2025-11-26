@@ -4,7 +4,7 @@ export default class Retry {
             const output = await fn();
             return output;
         } catch (_: any) {
-            if (retries <= 0) return null
+            if (retries <= 1) return null
 
             await new Promise(resolve => setTimeout(resolve, timeout));
             return Retry.execute(fn, retries - 1, timeout);

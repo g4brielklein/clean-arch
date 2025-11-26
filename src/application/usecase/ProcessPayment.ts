@@ -18,5 +18,6 @@ export default class ProcessPayment {
             amount: ride.getFare(),
         }
         const output = await processor.processPayment(input);
+        // TODO: Save transaction
     }
 }

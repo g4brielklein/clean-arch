@@ -14,7 +14,11 @@ export class CieloPaymentProcessor implements PaymentProcessor {
     async processPayment(input: any): Promise<any> {
         try {
             const gateway = new CieloPaymentGateway();
-            const output = await gateway.processTransaction(input);
+            let output: any;
+            await Retry.execute(async () => {
+                output = await gateway.processTransaction(input);
+            }, 3, 1000);
+            if (!output) throw new Error();
             return output;
         } catch(_: any) {
             if (!this.next) throw new Error('No processors available');

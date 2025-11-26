@@ -87,6 +87,7 @@ test("Should finish a ride", async () => {
         rideId: outputRequestRide.rideId,
         lat: -27.584905257808835,
         long: -48.545022195325124,
+        date: new Date("2025-11-25T22:50:00"),
     }
     await updatePosition.execute(inputUpdatePosition);
 
@@ -94,6 +95,7 @@ test("Should finish a ride", async () => {
         rideId: outputRequestRide.rideId,
         lat: -27.496887588317275,
         long: -48.522234807851476,
+        date: new Date("2025-11-25T23:10:00"),
     }
     await updatePosition.execute(inputUpdatePosition2);
 
@@ -101,6 +103,7 @@ test("Should finish a ride", async () => {
         rideId: outputRequestRide.rideId,
         lat: inputUpdatePosition.lat,
         long: inputUpdatePosition.long,
+        date: new Date("2025-11-25T23:30:00"),
     }
     await updatePosition.execute(inputUpdatePosition3);
 
@@ -112,7 +115,7 @@ test("Should finish a ride", async () => {
     const outputGetFinishedRide = await getRide.execute(outputRequestRide.rideId);
     expect(outputGetFinishedRide.status).toBe("finished");
     expect(outputGetFinishedRide.distance).toBe(20);
-    expect(outputGetFinishedRide.fare).toBe(42);
+    expect(outputGetFinishedRide.fare).toBe(78);
 });
 
 afterEach(async () => {
