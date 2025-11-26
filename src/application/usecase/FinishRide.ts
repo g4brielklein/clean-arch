@@ -13,9 +13,9 @@ export default class FinishRide {
         if (!ride) throw new ResourceNotFoundError(`Ride with id ${input.rideId} not found`, { errorCode: -8 });
         ride.finish();
         await this.rideRepository.updateRideStatus(ride);
-        
+        // Usecase calling another
         const processPayment = new ProcessPayment();
-        // await processPayment.execute(input.rideId);
+        await processPayment.execute(input.rideId);
     }
 }
 

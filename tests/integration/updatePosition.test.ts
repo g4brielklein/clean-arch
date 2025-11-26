@@ -84,6 +84,7 @@ test("Should update the position of a ride", async () => {
         rideId: outputRequestRide.rideId,
         lat: -27.584905257808835,
         long: -48.545022195325124,
+        date: new Date("2025-11-26T12:10:00"),
     }
     await updatePosition.execute(inputUpdatePosition);
 
@@ -91,6 +92,7 @@ test("Should update the position of a ride", async () => {
         rideId: outputRequestRide.rideId,
         lat: -27.496887588317275,
         long: -48.522234807851476,
+        date: new Date("2025-11-26T12:30:00"),
     }
     await updatePosition.execute(inputUpdatePosition2);
 
@@ -98,6 +100,7 @@ test("Should update the position of a ride", async () => {
         rideId: outputRequestRide.rideId,
         lat: inputUpdatePosition.lat,
         long: inputUpdatePosition.long,
+        date: new Date("2025-11-26T12:50:00"),
     }
     await updatePosition.execute(inputUpdatePosition3);
 
