@@ -15,7 +15,7 @@ export default class FinishRide {
         await this.rideRepository.updateRideStatus(ride);
         // Usecase calling another
         const processPayment = new ProcessPayment();
-        await processPayment.execute(input.rideId);
+        // await processPayment.execute(input.rideId);
     }
 }
 
